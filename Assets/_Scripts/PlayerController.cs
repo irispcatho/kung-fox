@@ -35,10 +35,12 @@ namespace _Scripts
 
         private Vector2 boxSize; // This variable will indicate the size (width, height) of the same box.
         private bool groundCheckEnabled = true; // This variable will indicate if the ground check is enabled or not.
+        private bool doubleJumpEnable = true; // This variable will indicate if the double jump is enabled or not.
         private float initialGravityScale; // This variable will store the initial gravity scale value of the Rigidbody.
         private bool jumping; // This variable will indicate if the player is currently jumping.
         private Vector2 moveInput;
         private PlayerInputs playerInputs;
+        private int jump = 0;
 
         private WaitForSeconds
             wait; // This variable will be used to wait within a coroutine before enabling the ground check again.
@@ -77,14 +79,16 @@ namespace _Scripts
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if (IsGrounded())
-            {
-                rb.velocity += Vector2.up * jumpPower;
-                jumping = true;
-                StartCoroutine(EnableGroundCheckAfterJump());
-            }
+            if (!doubleJumpEnable) return;
+            
+            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            jumping = true;
+            jump++;
+            if (jump >= 2)
+                doubleJumpEnable = false;
+            StartCoroutine(EnableGroundCheckAfterJump());
         }
-
+        
         private IEnumerator EnableGroundCheckAfterJump()
         {
             groundCheckEnabled = false;
@@ -108,13 +112,17 @@ namespace _Scripts
         private void HandleGravity()
         {
             if (groundCheckEnabled && IsGrounded())
+            {
                 jumping = false;
+                doubleJumpEnable = true;
+                jump = 0;
+            }
             else if (jumping && rb.velocity.y < 0)
                 rb.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
             else
                 rb.gravityScale = initialGravityScale;
         }
-
+        
         private void Move()
         {
             moveInput = playerInputs.Player.Move.ReadValue<Vector2>();

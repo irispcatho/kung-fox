@@ -146,22 +146,25 @@ namespace _Scripts
         private void HandleGravity()
         {
             if (IsWalled())
+            {
                 Debug.Log("Walled !");
+                ResetJumpingValue();
+            }
+            
             if (groundCheckEnabled && IsGrounded())
-            {
-                jumping = false;
-                dashing = false;
-                doubleJumpEnable = true;
-                jump = 0;
-            }
+                ResetJumpingValue();
             else if (jumping && rb.velocity.y < 0 && !dashing)
-            {
                 rb.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
-            }
             else
-            {
                 rb.gravityScale = initialGravityScale;
-            }
+        }
+
+        private void ResetJumpingValue()
+        {
+            jumping = false;
+            dashing = false;
+            doubleJumpEnable = true;
+            jump = 0;
         }
 
         private void Move()

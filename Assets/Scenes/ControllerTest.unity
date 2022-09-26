@@ -326,8 +326,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2058557028887830199, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: jumpPower
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058557028887830199, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058557028887830199, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: impactPower
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058557028887830199, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: jumpFallGravityMultiplier
+      value: 3.38
       objectReference: {fileID: 0}
     - target: {fileID: 6680542856012886097, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: m_RootOrder

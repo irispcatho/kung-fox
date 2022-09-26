@@ -11,8 +11,8 @@ namespace _Scripts
 
         [SerializeField] private float speed;
 
-        [SerializeField]
-        private float jumpPower; //This variable will determine the initial velocity to apply when jumping.
+        [SerializeField] private float jumpPower; //This variable will determine the initial velocity to apply when jumping.
+        [SerializeField] private float impactPower; //This variable will determine the initial velocity to apply when jumping.
 
         [SerializeField] [Range(1f, 5f)]
         private float
@@ -79,13 +79,36 @@ namespace _Scripts
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if (!doubleJumpEnable) return;
+            if(jump >= 1)
+                ImpactJump();
+            else
+                NormalJump();                
+        }
+
+        private void NormalJump()
+        {
+            if (!IsGrounded()) return;
             
             rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             jumping = true;
             jump++;
-            if (jump >= 2)
-                doubleJumpEnable = false;
+            
+            StartCoroutine(EnableGroundCheckAfterJump());
+        }
+
+        private void ImpactJump()
+        {
+            if (!doubleJumpEnable) return;
+
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+            mousePos.z = Camera.main.nearClipPlane;
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+            Vector3 direction = worldMousePos - transform.position;
+            direction.z = 0;
+            direction.Normalize();
+            rb.AddForce(-direction * impactPower, ForceMode2D.Impulse);
+            doubleJumpEnable = false;
+            
             StartCoroutine(EnableGroundCheckAfterJump());
         }
         

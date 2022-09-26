@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class MainMenuManager : MonoBehaviour
@@ -21,26 +22,58 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(test());
+        StartCoroutine(StartGame());
     }
 
-    IEnumerator test()
+    IEnumerator StartGame()
     {
         yield return new WaitForSeconds(.01f);
-        FadeOn?.Invoke();
+        FadeOff?.Invoke();
     }
 
     public void LaunchCredits()
     {
-        StartCoroutine(TransiToCredit());
+        StartCoroutine(TransiToCredit(true));
+    }
+    public void LeaveCredits()
+    {
+        StartCoroutine(TransiToCredit(false));
     }
 
-    IEnumerator TransiToCredit()
+    IEnumerator TransiToCredit(bool which)
     {
-        FadeOff?.Invoke();
-        yield return new WaitForSeconds(TimeFadeOn);
-        _menus[0].SetActive(false);
-        _menus[1].SetActive(true);
         FadeOn?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn);
+        _menus[0].SetActive(!which);
+        _menus[1].SetActive(which);
+        FadeOff?.Invoke();
+    }
+
+    public void LeaveGame()
+    {
+        StartCoroutine(LeaveGameTransi());
+    }
+
+    IEnumerator LeaveGameTransi()
+    {
+        FadeOn?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn);
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+
+        Application.Quit();
+    }
+
+    public void LaunchGame()
+    {
+        StartCoroutine(LaunchGameTransi());
+    }
+
+    IEnumerator LaunchGameTransi()
+    {
+        FadeOn?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn);
+        SceneManager.LoadScene(0);
     }
 }

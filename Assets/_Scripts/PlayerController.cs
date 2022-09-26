@@ -88,7 +88,6 @@ namespace _Scripts
         private void NormalJump()
         {
             if (!IsGrounded()) return;
-            
             rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             jumping = true;
             jump++;

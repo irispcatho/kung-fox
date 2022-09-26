@@ -16,7 +16,6 @@ public class FadeManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
         {
-            print("scene menu");
             _timeFadeOn = MainMenuManager.Instance.TimeFadeOn;
             _timeFadeOff = MainMenuManager.Instance.TimeFadeOff;
             MainMenuManager.Instance.FadeOn += FadeOn;
@@ -24,7 +23,6 @@ public class FadeManager : MonoBehaviour
         }
         else
         {
-            print("scene main");
             _timeFadeOn = MainGameManager.Instance.TimeFadeOn;
             _timeFadeOff = MainGameManager.Instance.TimeFadeOff;
             MainGameManager.Instance.FadeOn += FadeOn;
@@ -37,7 +35,6 @@ public class FadeManager : MonoBehaviour
     private void FadeOn()
     {
         _fade.transform.DOMoveY(_tpPoints[0].transform.position.y, _timeFadeOn);//.SetEase(Ease.Linear);
-        print("fadeon");
     }
 
     private void FadeOff()
@@ -52,7 +49,15 @@ public class FadeManager : MonoBehaviour
 
     private void OnDisable()
     {
-        MainMenuManager.Instance.FadeOn -= FadeOn;
-        MainMenuManager.Instance.FadeOff -= FadeOff;
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        {
+            MainMenuManager.Instance.FadeOn -= FadeOn;
+            MainMenuManager.Instance.FadeOff -= FadeOff;
+        }
+        else
+        {
+            MainGameManager.Instance.FadeOn -= FadeOn;
+            MainGameManager.Instance.FadeOff -= FadeOff;
+        }
     }
 }

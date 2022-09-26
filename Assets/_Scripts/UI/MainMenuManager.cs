@@ -14,6 +14,8 @@ public class MainMenuManager : MonoBehaviour
     public float TimeFadeOn = 0f;
     public float TimeFadeOff = 0f;
 
+    private bool _canLaunchTransi = true;
+
     public static MainMenuManager Instance;
     private void Awake()
     {
@@ -42,11 +44,17 @@ public class MainMenuManager : MonoBehaviour
 
     IEnumerator TransiToCredit(bool which)
     {
-        FadeOn?.Invoke();
-        yield return new WaitForSeconds(TimeFadeOn);
-        _menus[0].SetActive(!which);
-        _menus[1].SetActive(which);
-        FadeOff?.Invoke();
+        if (_canLaunchTransi)
+        {
+            _canLaunchTransi = false;
+            FadeOn?.Invoke();
+            yield return new WaitForSeconds(TimeFadeOn);
+            _menus[0].SetActive(!which);
+            _menus[1].SetActive(which);
+            FadeOff?.Invoke();
+            yield return new WaitForSeconds(TimeFadeOff);
+            _canLaunchTransi = true;
+        }
     }
 
     public void LeaveGame()
@@ -58,9 +66,9 @@ public class MainMenuManager : MonoBehaviour
     {
         FadeOn?.Invoke();
         yield return new WaitForSeconds(TimeFadeOn);
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #endif
+#endif
 
         Application.Quit();
     }

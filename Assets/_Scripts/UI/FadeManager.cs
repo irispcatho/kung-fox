@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class FadeManager : MonoBehaviour
@@ -13,11 +14,22 @@ public class FadeManager : MonoBehaviour
 
     void Start()
     {
-        _timeFadeOn = MainMenuManager.Instance.TimeFadeOn;
-        _timeFadeOff = MainMenuManager.Instance.TimeFadeOff;
-
-        MainMenuManager.Instance.FadeOn += FadeOn;
-        MainMenuManager.Instance.FadeOff += FadeOff;
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        {
+            print("scene menu");
+            _timeFadeOn = MainMenuManager.Instance.TimeFadeOn;
+            _timeFadeOff = MainMenuManager.Instance.TimeFadeOff;
+            MainMenuManager.Instance.FadeOn += FadeOn;
+            MainMenuManager.Instance.FadeOff += FadeOff;
+        }
+        else
+        {
+            print("scene main");
+            _timeFadeOn = MainGameManager.Instance.TimeFadeOn;
+            _timeFadeOff = MainGameManager.Instance.TimeFadeOff;
+            MainGameManager.Instance.FadeOn += FadeOn;
+            MainGameManager.Instance.FadeOff += FadeOff;
+        }
 
         _tempFadeSystem.transform.DOScale(Vector2.one, 0);
     }

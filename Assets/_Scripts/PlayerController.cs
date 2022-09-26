@@ -11,8 +11,11 @@ namespace _Scripts
 
         [SerializeField] private float speed;
 
-        [SerializeField] private float jumpPower; //This variable will determine the initial velocity to apply when jumping.
-        [SerializeField] private float impactPower; //This variable will determine the initial velocity to apply when jumping.
+        [SerializeField]
+        private float jumpPower; //This variable will determine the initial velocity to apply when jumping.
+
+        [SerializeField]
+        private float dashPower; //This variable will determine the initial velocity to apply when jumping.
 
         [SerializeField] [Range(1f, 5f)]
         private float
@@ -27,6 +30,10 @@ namespace _Scripts
             groundMask; //This variable will allow us to check for colliders that are within the ground layer when using the OverlapBox method.
 
         [SerializeField]
+        private LayerMask
+            wallMask; //This variable will allow us to check for colliders that are within the wall layer when using the OverlapBox method.
+
+        [SerializeField]
         private float
             disableGroundCheckTime; //This variable will determine how much time does the ground check gets disabled when jumping in order to avoid resetting the jumping bool value.
 
@@ -34,17 +41,18 @@ namespace _Scripts
             boxCenter; //This variable will indicate the central coordinate of the box that checks if the player is on the ground or not.
 
         private Vector2 boxSize; // This variable will indicate the size (width, height) of the same box.
-        private bool groundCheckEnabled = true; // This variable will indicate if the ground check is enabled or not.
+        private bool dashing; // This variable will indicate if the player is currently dashing.
         private bool doubleJumpEnable = true; // This variable will indicate if the double jump is enabled or not.
+        private Vector2 fireInput;
+        private bool groundCheckEnabled = true; // This variable will indicate if the ground check is enabled or not.
         private float initialGravityScale; // This variable will store the initial gravity scale value of the Rigidbody.
+        private int jump;
         private bool jumping; // This variable will indicate if the player is currently jumping.
         private Vector2 moveInput;
         private PlayerInputs playerInputs;
-        private int jump = 0;
 
         private WaitForSeconds
             wait; // This variable will be used to wait within a coroutine before enabling the ground check again.
-
 
         private void Awake()
         {
@@ -79,19 +87,19 @@ namespace _Scripts
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if(jump >= 1)
+            if (jump >= 1)
                 ImpactJump();
             else
-                NormalJump();                
+                NormalJump();
         }
 
         private void NormalJump()
         {
             if (!IsGrounded()) return;
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * (jumpPower * 10), ForceMode2D.Impulse);
             jumping = true;
             jump++;
-            
+
             StartCoroutine(EnableGroundCheckAfterJump());
         }
 
@@ -99,18 +107,13 @@ namespace _Scripts
         {
             if (!doubleJumpEnable) return;
 
-            Vector3 mousePos = Mouse.current.position.ReadValue();
-            mousePos.z = Camera.main.nearClipPlane;
-            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-            Vector3 direction = worldMousePos - transform.position;
-            direction.z = 0;
-            direction.Normalize();
-            rb.AddForce(-direction * impactPower, ForceMode2D.Impulse);
+            fireInput = playerInputs.Player.FireDirection.ReadValue<Vector2>();
+            dashing = true;
+            rb.AddForce(-fireInput * (dashPower * 10), ForceMode2D.Impulse);
             doubleJumpEnable = false;
-            
             StartCoroutine(EnableGroundCheckAfterJump());
         }
-        
+
         private IEnumerator EnableGroundCheckAfterJump()
         {
             groundCheckEnabled = false;
@@ -123,32 +126,51 @@ namespace _Scripts
             Bounds bounds = collider.bounds;
             boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
                         Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
-
             boxSize = new Vector2(bounds.size.x, groundCheckHeight);
-
             Collider2D groundBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundMask);
 
             return groundBox;
         }
 
+        private bool IsWalled()
+        {
+            Bounds bounds = collider.bounds;
+            boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
+                        Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
+            boxSize = new Vector2(bounds.size.x, groundCheckHeight);
+            Collider2D wallBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, wallMask);
+
+            return wallBox;
+        }
+
         private void HandleGravity()
         {
+            if (IsWalled())
+                Debug.Log("Walled !");
             if (groundCheckEnabled && IsGrounded())
             {
                 jumping = false;
+                dashing = false;
                 doubleJumpEnable = true;
                 jump = 0;
             }
-            else if (jumping && rb.velocity.y < 0)
+            else if (jumping && rb.velocity.y < 0 && !dashing)
+            {
                 rb.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
+            }
             else
+            {
                 rb.gravityScale = initialGravityScale;
+            }
         }
-        
+
         private void Move()
         {
             moveInput = playerInputs.Player.Move.ReadValue<Vector2>();
-            rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
+
+
+            if (!dashing)
+                rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
         }
     }
 }

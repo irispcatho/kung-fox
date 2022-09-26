@@ -135,6 +135,7 @@ MonoBehaviour:
   collider: {fileID: 6680542856012886096}
   speed: 20
   jumpPower: 8
+  impactPower: 20
   jumpFallGravityMultiplier: 2
   groundCheckHeight: 0.05
   groundMask:

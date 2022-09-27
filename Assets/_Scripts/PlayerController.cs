@@ -8,6 +8,7 @@ namespace _Scripts
     {
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private new Collider2D collider;
+        [SerializeField] private SpriteRenderer sr;
 
         [SerializeField] private float speed;
 
@@ -99,7 +100,7 @@ namespace _Scripts
             rb.AddForce(Vector2.up * (jumpPower * 10), ForceMode2D.Impulse);
             jumping = true;
             jump++;
-
+            sr.color = Color.red;
             StartCoroutine(EnableGroundCheckAfterJump());
         }
 
@@ -148,13 +149,16 @@ namespace _Scripts
             if (IsWalled())
             {
                 Debug.Log("Walled !");
-                ResetJumpingValue();
+                // ResetJumpingValue();
             }
             
             if (groundCheckEnabled && IsGrounded())
                 ResetJumpingValue();
-            else if (jumping && rb.velocity.y < 0 && !dashing)
+            else if (jumping && rb.velocity.y < 0)
+            {
+                dashing = false;
                 rb.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
+            }
             else
                 rb.gravityScale = initialGravityScale;
         }
@@ -162,15 +166,14 @@ namespace _Scripts
         private void ResetJumpingValue()
         {
             jumping = false;
-            dashing = false;
             doubleJumpEnable = true;
             jump = 0;
+            sr.color = Color.green;
         }
 
         private void Move()
         {
             moveInput = playerInputs.Player.Move.ReadValue<Vector2>();
-
 
             if (!dashing)
                 rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);

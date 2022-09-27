@@ -133,14 +133,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 6680542856012886100}
   collider: {fileID: 6680542856012886096}
+  sr: {fileID: 5695447102205724992}
   speed: 20
   jumpPower: 8
-  impactPower: 20
-  jumpFallGravityMultiplier: 2
+  dashPower: 15
+  jumpFallGravityMultiplier: 1.73
   groundCheckHeight: 0.05
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 128
   disableGroundCheckTime: 0.025
 --- !u!50 &6680542856012886100
 Rigidbody2D:

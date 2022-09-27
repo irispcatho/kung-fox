@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,6 +38,9 @@ namespace _Scripts
         private bool dashing;
         private Vector2 fireInput;
 
+        private bool hasThePos = false; 
+        private Vector3 pos;
+            
         private void Awake()
         {
             playerInputs = new PlayerInputs();
@@ -50,7 +54,10 @@ namespace _Scripts
         {
             Move();
             HandleGravity();
+            TestWall();
         }
+
+        
 
         private void OnEnable()
         {
@@ -122,16 +129,16 @@ namespace _Scripts
                         Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
             boxSize = new Vector2(bounds.size.x, groundCheckHeight);
             Collider2D wallBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, wallMask);
-
-            return wallBox;
+            
+            return wallBox && !IsGrounded();
         }
 
         private void HandleGravity()
         {
-            if (IsWalled()) Debug.Log("Walled !");
-
-            if (groundCheckEnabled && IsGrounded())
+            if (groundCheckEnabled && IsGrounded() && !IsWalled())
             {
+                hasThePos = false;
+                playerRigidbody.gravityScale = initialGravityScale;
                 ResetJumpingValue();
             }
             else if (jumping && playerRigidbody.velocity.y < 0)
@@ -139,24 +146,49 @@ namespace _Scripts
                 dashing = false;
                 playerRigidbody.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
             }
-            else
+            else if(!groundCheckEnabled && !IsGrounded() || !IsWalled())
             {
                 playerRigidbody.gravityScale = initialGravityScale;
             }
         }
 
+        private void TestWall()
+        {
+            if (!IsWalled()) return;
+            
+            if (!hasThePos)
+            {
+                pos = transform.position;
+                hasThePos = true;
+            }
+            
+            transform.position = pos;
+            // playerRigidbody.gravityScale = 0;
+            playerSpriteRenderer.color = Color.magenta;
+            StartCoroutine(waitTest());
+            ResetJumpingValue();
+        }
+
+        private IEnumerator waitTest()
+        {
+            yield return new WaitForEndOfFrame();
+            pos = new Vector3(pos.x, pos.y - 0.05f, pos.z);
+        }
+
         private void ResetJumpingValue()
         {
             jumping = false;
+            dashing = false;
             doubleJumpEnable = true;
             jump = 0;
-            playerSpriteRenderer.color = Color.green;
+            if(!IsWalled())
+                playerSpriteRenderer.color = Color.green;
         }
 
         private void Move()
         {
             moveInput = playerInputs.Player.Move.ReadValue<Vector2>();
-
+            
             if (!dashing)
                 playerRigidbody.velocity = new Vector2(moveInput.x * speed, playerRigidbody.velocity.y);
         }

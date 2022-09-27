@@ -6,60 +6,42 @@ namespace _Scripts
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private Rigidbody2D rb;
-        [SerializeField] private new Collider2D collider;
-        [SerializeField] private SpriteRenderer sr;
-
-        [SerializeField] private float speed;
-
-        [SerializeField]
-        private float jumpPower; //This variable will determine the initial velocity to apply when jumping.
-
-        [SerializeField]
-        private float dashPower; //This variable will determine the initial velocity to apply when jumping.
-
-        [SerializeField] [Range(1f, 5f)]
-        private float
-            jumpFallGravityMultiplier; //This variable will determine the gravity scale applied to the Rigidbody when the player is falling after performing a jump.
-
-        [SerializeField]
-        private float
-            groundCheckHeight; //This variable will determine the height of the box (OverlapBox method) that we’ll be using below the player to determine if the it’s on the ground or not.
-
-        [SerializeField]
-        private LayerMask
-            groundMask; //This variable will allow us to check for colliders that are within the ground layer when using the OverlapBox method.
-
-        [SerializeField]
-        private LayerMask
-            wallMask; //This variable will allow us to check for colliders that are within the wall layer when using the OverlapBox method.
-
-        [SerializeField]
-        private float
-            disableGroundCheckTime; //This variable will determine how much time does the ground check gets disabled when jumping in order to avoid resetting the jumping bool value.
-
-        private Vector2
-            boxCenter; //This variable will indicate the central coordinate of the box that checks if the player is on the ground or not.
-
-        private Vector2 boxSize; // This variable will indicate the size (width, height) of the same box.
-        private bool dashing; // This variable will indicate if the player is currently dashing.
-        private bool doubleJumpEnable = true; // This variable will indicate if the double jump is enabled or not.
-        private Vector2 fireInput;
-        private bool groundCheckEnabled = true; // This variable will indicate if the ground check is enabled or not.
-        private float initialGravityScale; // This variable will store the initial gravity scale value of the Rigidbody.
-        private int jump;
-        private bool jumping; // This variable will indicate if the player is currently jumping.
-        private Vector2 moveInput;
+        [Header("References")]
+        [SerializeField] private Rigidbody2D playerRigidbody;
+        [SerializeField] private Collider2D playerCollider;
+        [SerializeField] private SpriteRenderer playerSpriteRenderer;
         private PlayerInputs playerInputs;
+        private WaitForSeconds wait;
 
-        private WaitForSeconds
-            wait; // This variable will be used to wait within a coroutine before enabling the ground check again.
+        [Header("Movement")]
+        [SerializeField] private float speed;
+        [SerializeField] private float groundCheckHeight;
+        [SerializeField] private LayerMask groundMask;
+        [SerializeField] private LayerMask wallMask;
+        [SerializeField] private float disableGroundCheckTime;
+        private Vector2 moveInput;
+        private bool groundCheckEnabled = true;
+        private float initialGravityScale;
+
+        [Header("Jump")]
+        [SerializeField] private float jumpPower;
+        [SerializeField] [Range(1f, 5f)] private float jumpFallGravityMultiplier;
+        private Vector2 boxSize;
+        private Vector2 boxCenter;
+        private int jump;
+        private bool jumping;
+
+        [Header("Dash")]
+        [SerializeField] private float dashPower;
+        private bool doubleJumpEnable = true;
+        private bool dashing;
+        private Vector2 fireInput;
 
         private void Awake()
         {
             playerInputs = new PlayerInputs();
 
-            initialGravityScale = rb.gravityScale;
+            initialGravityScale = playerRigidbody.gravityScale;
             wait = new WaitForSeconds(disableGroundCheckTime);
             playerInputs.Player.Jump.performed += Jump;
         }
@@ -97,10 +79,10 @@ namespace _Scripts
         private void NormalJump()
         {
             if (!IsGrounded()) return;
-            rb.AddForce(Vector2.up * (jumpPower * 10), ForceMode2D.Impulse);
+            playerRigidbody.AddForce(Vector2.up * (jumpPower * 10), ForceMode2D.Impulse);
             jumping = true;
             jump++;
-            sr.color = Color.red;
+            playerSpriteRenderer.color = Color.red;
             StartCoroutine(EnableGroundCheckAfterJump());
         }
 
@@ -110,7 +92,7 @@ namespace _Scripts
 
             fireInput = playerInputs.Player.FireDirection.ReadValue<Vector2>();
             dashing = true;
-            rb.AddForce(-fireInput * (dashPower * 10), ForceMode2D.Impulse);
+            playerRigidbody.AddForce(-fireInput * (dashPower * 10), ForceMode2D.Impulse);
             doubleJumpEnable = false;
             StartCoroutine(EnableGroundCheckAfterJump());
         }
@@ -124,7 +106,7 @@ namespace _Scripts
 
         private bool IsGrounded()
         {
-            Bounds bounds = collider.bounds;
+            Bounds bounds = playerCollider.bounds;
             boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
                         Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
             boxSize = new Vector2(bounds.size.x, groundCheckHeight);
@@ -135,7 +117,7 @@ namespace _Scripts
 
         private bool IsWalled()
         {
-            Bounds bounds = collider.bounds;
+            Bounds bounds = playerCollider.bounds;
             boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
                         Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
             boxSize = new Vector2(bounds.size.x, groundCheckHeight);
@@ -146,21 +128,21 @@ namespace _Scripts
 
         private void HandleGravity()
         {
-            if (IsWalled())
-            {
-                Debug.Log("Walled !");
-                // ResetJumpingValue();
-            }
-            
+            if (IsWalled()) Debug.Log("Walled !");
+
             if (groundCheckEnabled && IsGrounded())
+            {
                 ResetJumpingValue();
-            else if (jumping && rb.velocity.y < 0)
+            }
+            else if (jumping && playerRigidbody.velocity.y < 0)
             {
                 dashing = false;
-                rb.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
+                playerRigidbody.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
             }
             else
-                rb.gravityScale = initialGravityScale;
+            {
+                playerRigidbody.gravityScale = initialGravityScale;
+            }
         }
 
         private void ResetJumpingValue()
@@ -168,7 +150,7 @@ namespace _Scripts
             jumping = false;
             doubleJumpEnable = true;
             jump = 0;
-            sr.color = Color.green;
+            playerSpriteRenderer.color = Color.green;
         }
 
         private void Move()
@@ -176,7 +158,7 @@ namespace _Scripts
             moveInput = playerInputs.Player.Move.ReadValue<Vector2>();
 
             if (!dashing)
-                rb.velocity = new Vector2(moveInput.x * speed, rb.velocity.y);
+                playerRigidbody.velocity = new Vector2(moveInput.x * speed, playerRigidbody.velocity.y);
         }
     }
 }

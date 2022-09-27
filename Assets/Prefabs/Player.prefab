@@ -131,13 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bb914d2e6e637849b158da2498a0561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 6680542856012886100}
-  collider: {fileID: 6680542856012886096}
-  sr: {fileID: 5695447102205724992}
+  playerRigidbody: {fileID: 6680542856012886100}
+  playerCollider: {fileID: 6680542856012886096}
+  playerSpriteRenderer: {fileID: 5695447102205724992}
   speed: 20
-  jumpPower: 8
-  dashPower: 15
-  jumpFallGravityMultiplier: 1.73
   groundCheckHeight: 0.05
   groundMask:
     serializedVersion: 2
@@ -146,6 +143,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   disableGroundCheckTime: 0.025
+  jumpPower: 8
+  jumpFallGravityMultiplier: 1.73
+  dashPower: 15
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4

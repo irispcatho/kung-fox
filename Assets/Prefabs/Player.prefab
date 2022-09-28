@@ -146,6 +146,7 @@ MonoBehaviour:
   jumpPower: 8
   jumpFallGravityMultiplier: 1.73
   dashPower: 15
+  descendSpeed: 2
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4

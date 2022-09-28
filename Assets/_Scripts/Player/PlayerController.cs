@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -38,8 +39,12 @@ namespace _Scripts
         private bool dashing;
         private Vector2 fireInput;
 
-        private bool hasThePos = false; 
+        [Header("Wall")]
+        [SerializeField] private float descendSpeed;
+        private bool hasThePos; 
         private Vector3 pos;
+        private Vector3 wallPos;
+        private bool hasToWallJump;
             
         private void Awake()
         {
@@ -54,7 +59,7 @@ namespace _Scripts
         {
             Move();
             HandleGravity();
-            TestWall();
+            OnTheWall();
         }
 
         
@@ -81,6 +86,9 @@ namespace _Scripts
                 ImpactJump();
             else
                 NormalJump();
+
+            if (IsWalled())
+                WallJump();
         }
 
         private void NormalJump()
@@ -126,11 +134,24 @@ namespace _Scripts
         {
             Bounds bounds = playerCollider.bounds;
             boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
-                        Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
+                        Vector2.down * (bounds.extents.y + groundCheckHeight / 2f);
             boxSize = new Vector2(bounds.size.x, groundCheckHeight);
             Collider2D wallBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, wallMask);
             
-            return wallBox && !IsGrounded();
+            return wallBox && !IsGrounded() && !hasToWallJump;
+        }
+
+        private void OnCollisionEnter2D(Collision2D col)
+        {
+            if (col.gameObject.GetComponent<WallController>())
+                wallPos = col.transform.position;
+        }
+
+        private void WallJump()
+        {
+            hasToWallJump = true;
+            Debug.Log("Propulsion du mur");
+            playerRigidbody.AddForce(new Vector2(-wallPos.x, 0) * (dashPower * 10), ForceMode2D.Impulse);
         }
 
         private void HandleGravity()
@@ -152,7 +173,7 @@ namespace _Scripts
             }
         }
 
-        private void TestWall()
+        private void OnTheWall()
         {
             if (!IsWalled()) return;
             
@@ -165,14 +186,15 @@ namespace _Scripts
             transform.position = pos;
             // playerRigidbody.gravityScale = 0;
             playerSpriteRenderer.color = Color.magenta;
-            StartCoroutine(waitTest());
+            
+            StartCoroutine(WallDescent());
             ResetJumpingValue();
         }
 
-        private IEnumerator waitTest()
+        private IEnumerator WallDescent()
         {
             yield return new WaitForEndOfFrame();
-            pos = new Vector3(pos.x, pos.y - 0.05f, pos.z);
+            pos = new Vector3(pos.x, pos.y - descendSpeed / 100, pos.z);
         }
 
         private void ResetJumpingValue()
@@ -180,6 +202,7 @@ namespace _Scripts
             jumping = false;
             dashing = false;
             doubleJumpEnable = true;
+            hasToWallJump = false;
             jump = 0;
             if(!IsWalled())
                 playerSpriteRenderer.color = Color.green;

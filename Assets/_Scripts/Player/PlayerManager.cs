@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using DG.Tweening;
 using Unity.VisualScripting;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
 
     private Rigidbody2D rb;
-    
+
+    private const float _timeDeathScale = .2f;
+
     public static PlayerManager Instance;
     private void Awake()
     {
@@ -25,15 +28,29 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        MainGameManager.Instance.ResetPlayer += ResetPlayer;
+        MainGameManager.Instance.ResetPosPlayer += ResetPosPlayer;
+        MainGameManager.Instance.ResetScalePlayer += ResetScalePlayer;
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<PlayerKilled>())
+        if (collision.gameObject.GetComponent<PlayerKilled>() || collision.gameObject.GetComponent<RockFalling>())
         {
             PlayerDeath?.Invoke();
             PlayerDeathAnim();
+            ShakeCam.Instance.StartShakingCam(0.5f);
+        
+            if (collision.gameObject.GetComponent<RockFalling>())
+                Destroy(collision.gameObject);
         }
+
+
+        if (collision.gameObject.GetComponent<DestructibleBloc>())
+        {
+            ShakeMap.Instance.StartShakingCam(-.3f);
+            Destroy(collision.gameObject);
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,12 +60,16 @@ public class PlayerManager : MonoBehaviour
             PlayerWin?.Invoke();
             PlayerWinAnim();
         }
+        if (collision.gameObject.GetComponent<DarkZone>())
+        {
+            print("salut c'est la darkzone");
+        }
     }
 
     private void PlayerDeathAnim()
     {
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        gameObject.transform.DOScale(Vector2.zero, .2f).SetEase(Ease.InBounce);
+        gameObject.transform.DOScale(Vector2.zero, _timeDeathScale).SetEase(Ease.InBounce);
         var trasnferPos = gameObject.transform;
         Instantiate(fx_Death, trasnferPos);
     }
@@ -57,15 +78,29 @@ public class PlayerManager : MonoBehaviour
     {
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         Instantiate(fx_Win, gameObject.transform);
-
     }
 
-    private void ResetPlayer()
+    private void ResetPosPlayer()
+    {
+        gameObject.transform.DOMove(_spawnPoint.position, 0);
+    }
+
+    private void ResetScalePlayer()
+    {
+        gameObject.transform.DOScale(Vector2.one, _timeDeathScale).SetEase(Ease.InBounce).OnComplete(ResetRBPlayer);
+        RipplePostProcessor.Instance.RippleEffect(gameObject.transform.position);
+    }
+
+    private void ResetRBPlayer()
     {
         rb.constraints = RigidbodyConstraints2D.None;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-        gameObject.transform.DOMove(_spawnPoint.position, 0);
-        gameObject.transform.DOScale(Vector2.one, .2f).SetEase(Ease.InBounce);
+    }
 
+
+    private void OnDisable()
+    {
+        MainGameManager.Instance.ResetPosPlayer -= ResetPosPlayer;
+        MainGameManager.Instance.ResetScalePlayer -= ResetScalePlayer;
     }
 }

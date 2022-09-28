@@ -8,9 +8,10 @@ public class MainGameManager : MonoBehaviour
 {
     public event Action FadeOn;
     public event Action FadeOff;
-    public event Action ResetPlayer;
+    public event Action ResetPosPlayer;
+    public event Action ResetScalePlayer;
 
-    [SerializeField] GameObject win_Text = null;
+    [SerializeField] private GameObject win_Text = null;
 
     [Header("FadeSystem")]
     public float TimeFadeOn = 0f;
@@ -41,14 +42,16 @@ public class MainGameManager : MonoBehaviour
         StartCoroutine(PlayerDeathTransi());
     }
 
-    private IEnumerator PlayerDeathTransi()
+    private IEnumerator PlayerDeathTransi() //Timing a revoir
     {
         yield return new WaitForSeconds(TimeFadeOn);
         FadeOn?.Invoke();
-        yield return new WaitForSeconds(TimeFadeOn);
+        yield return new WaitForSeconds(TimeFadeOn * .5f);
+        ResetPosPlayer?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn * .5f);
         FadeOff?.Invoke();
-        yield return new WaitForSeconds(TimeFadeOn);
-        ResetPlayer?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn * .5f);
+        ResetScalePlayer?.Invoke();
     }
 
     private void PlayerWin()
@@ -58,7 +61,7 @@ public class MainGameManager : MonoBehaviour
 
     private IEnumerator PlayerWinTransi()
     {
-        yield return new WaitForSeconds(TimeFadeOn*3);
+        yield return new WaitForSeconds(TimeFadeOn * 3);
         FadeOn?.Invoke();
         yield return new WaitForSeconds(TimeFadeOn);
         win_Text.SetActive(true);

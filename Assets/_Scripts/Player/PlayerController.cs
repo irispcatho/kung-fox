@@ -28,10 +28,11 @@ namespace _Scripts
         [Header("Jump")]
         [SerializeField] private float _jumpPower;
         [SerializeField] [Range(1f, 5f)] private float _jumpFallGravityMultiplier;
+        [SerializeField] [Range(1f, 5f)] private float _jumpGravityMultiplier;
         private Vector2 _boxSize;
         private Vector2 _boxCenter;
         private int _jump;
-        private bool _jumping;
+        private bool _isJumping;
 
         [Header("Dash")]
         [SerializeField] private float _dashPower;
@@ -54,6 +55,7 @@ namespace _Scripts
             _initialGravityScale = _playerRigidbody.gravityScale;
             _wait = new WaitForSeconds(_disableGroundCheckTime);
             _playerInputs.Player.Jump.performed += Jump;
+            _playerInputs.Player.Dash.performed += Dash;
         }
 
         private void FixedUpdate()
@@ -62,8 +64,6 @@ namespace _Scripts
             HandleGravity();
             OnTheWall();
         }
-
-        
 
         private void OnEnable()
         {
@@ -77,26 +77,27 @@ namespace _Scripts
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = _jumping ? Color.red : Color.green;
+            Gizmos.color = _isJumping ? Color.red : Color.green;
             Gizmos.DrawWireCube(_boxCenter, _boxSize);
         }
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if (_jump >= 1)
-                ImpactJump();
-            else
-                NormalJump();
+            NormalJump();
 
             if (IsWalled())
                 WallJump();
         }
 
+        private void Dash(InputAction.CallbackContext obj) => ImpactJump();
+        
+
         private void NormalJump()
         {
             if (!IsGrounded()) return;
             _playerRigidbody.AddForce(Vector2.up * (_jumpPower * 10), ForceMode2D.Impulse);
-            _jumping = true;
+            print(_playerSpriteRenderer.bounds.size.y);
+            _isJumping = true;
             _jump++;
             _playerSpriteRenderer.color = Color.red;
             StartCoroutine(EnableGroundCheckAfterJump());
@@ -167,14 +168,24 @@ namespace _Scripts
                 _playerRigidbody.gravityScale = _initialGravityScale;
                 ResetJumpingValue();
             }
-            else if (_jumping && _playerRigidbody.velocity.y < 0)
+            else switch (_isJumping)
             {
-                _dashing = false;
-                _playerRigidbody.gravityScale = _initialGravityScale * _jumpFallGravityMultiplier;
-            }
-            else if(!_groundCheckEnabled && !IsGrounded() || !IsWalled())
-            {
-                _playerRigidbody.gravityScale = _initialGravityScale;
+                case true when _playerRigidbody.velocity.y < 0:
+                    _dashing = false;
+                    _playerRigidbody.gravityScale = _initialGravityScale * _jumpFallGravityMultiplier;
+                    break;
+                case true when _playerRigidbody.velocity.y > 0:
+                    _playerRigidbody.gravityScale = _initialGravityScale * _jumpGravityMultiplier;
+                    break;
+                default:
+                {
+                    if(!_groundCheckEnabled && !IsGrounded() || !IsWalled())
+                    {
+                        _playerRigidbody.gravityScale = _initialGravityScale;
+                    }
+
+                    break;
+                }
             }
         }
 
@@ -189,7 +200,6 @@ namespace _Scripts
             }
             
             transform.position = _pos;
-            // playerRigidbody.gravityScale = 0;
             _playerSpriteRenderer.color = Color.magenta;
             
             StartCoroutine(WallDescent());
@@ -204,7 +214,7 @@ namespace _Scripts
 
         private void ResetJumpingValue()
         {
-            _jumping = false;
+            _isJumping = false;
             _dashing = false;
             _doubleJumpEnable = true;
             _isWallJumping = false;
@@ -217,8 +227,10 @@ namespace _Scripts
         {
             _moveInput = _playerInputs.Player.Move.ReadValue<Vector2>();
             
-            if (!_dashing && !_isWallJumping)
+            if (!_dashing && !_isWallJumping && !_isJumping)
                 _playerRigidbody.velocity = new Vector2(_moveInput.x * _speed, _playerRigidbody.velocity.y);
+            else if(_isJumping)
+                _playerRigidbody.velocity = new Vector2(_moveInput.x * _speed / 2, _playerRigidbody.velocity.y);
         }
     }
 }

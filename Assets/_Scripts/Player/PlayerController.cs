@@ -9,50 +9,51 @@ namespace _Scripts
     public class PlayerController : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Rigidbody2D playerRigidbody;
-        [SerializeField] private Collider2D playerCollider;
-        [SerializeField] private SpriteRenderer playerSpriteRenderer;
-        private PlayerInputs playerInputs;
-        private WaitForSeconds wait;
+        [SerializeField] private Rigidbody2D _playerRigidbody;
+        [SerializeField] private Collider2D _playerCollider;
+        [SerializeField] private SpriteRenderer _playerSpriteRenderer;
+        private PlayerInputs _playerInputs;
+        private WaitForSeconds _wait;
 
         [Header("Movement")]
-        [SerializeField] private float speed;
-        [SerializeField] private float groundCheckHeight;
-        [SerializeField] private LayerMask groundMask;
-        [SerializeField] private LayerMask wallMask;
-        [SerializeField] private float disableGroundCheckTime;
-        private Vector2 moveInput;
-        private bool groundCheckEnabled = true;
-        private float initialGravityScale;
+        [SerializeField] private float _speed;
+        [SerializeField] private float _groundCheckHeight;
+        [SerializeField] private LayerMask _groundMask;
+        [SerializeField] private LayerMask _wallMask;
+        [SerializeField] private float _disableGroundCheckTime;
+        private Vector2 _moveInput;
+        private bool _groundCheckEnabled = true;
+        private float _initialGravityScale;
 
         [Header("Jump")]
-        [SerializeField] private float jumpPower;
-        [SerializeField] [Range(1f, 5f)] private float jumpFallGravityMultiplier;
-        private Vector2 boxSize;
-        private Vector2 boxCenter;
-        private int jump;
-        private bool jumping;
+        [SerializeField] private float _jumpPower;
+        [SerializeField] [Range(1f, 5f)] private float _jumpFallGravityMultiplier;
+        private Vector2 _boxSize;
+        private Vector2 _boxCenter;
+        private int _jump;
+        private bool _jumping;
 
         [Header("Dash")]
-        [SerializeField] private float dashPower;
-        private bool doubleJumpEnable = true;
-        private bool dashing;
-        private Vector2 fireInput;
+        [SerializeField] private float _dashPower;
+        private bool _doubleJumpEnable = true;
+        private bool _dashing;
+        private Vector2 _fireInput;
 
         [Header("Wall")]
-        [SerializeField] private float descendSpeed;
-        private bool hasThePos; 
-        private Vector3 pos;
-        private Vector3 wallPos;
-        private bool hasToWallJump;
+        [SerializeField] private float _descendSpeed;
+        private bool _hasThePos; 
+        private Vector3 _pos;
+        private Vector3 _wallPos;
+        private bool _isWallJumping;
+        private Direction _wallJumpDirection; 
             
         private void Awake()
         {
-            playerInputs = new PlayerInputs();
+            _playerInputs = new PlayerInputs();
 
-            initialGravityScale = playerRigidbody.gravityScale;
-            wait = new WaitForSeconds(disableGroundCheckTime);
-            playerInputs.Player.Jump.performed += Jump;
+            _initialGravityScale = _playerRigidbody.gravityScale;
+            _wait = new WaitForSeconds(_disableGroundCheckTime);
+            _playerInputs.Player.Jump.performed += Jump;
         }
 
         private void FixedUpdate()
@@ -66,23 +67,23 @@ namespace _Scripts
 
         private void OnEnable()
         {
-            playerInputs.Player.Enable();
+            _playerInputs.Player.Enable();
         }
 
         private void OnDisable()
         {
-            playerInputs.Player.Disable();
+            _playerInputs.Player.Disable();
         }
 
         private void OnDrawGizmos()
         {
-            Gizmos.color = jumping ? Color.red : Color.green;
-            Gizmos.DrawWireCube(boxCenter, boxSize);
+            Gizmos.color = _jumping ? Color.red : Color.green;
+            Gizmos.DrawWireCube(_boxCenter, _boxSize);
         }
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if (jump >= 1)
+            if (_jump >= 1)
                 ImpactJump();
             else
                 NormalJump();
@@ -94,82 +95,86 @@ namespace _Scripts
         private void NormalJump()
         {
             if (!IsGrounded()) return;
-            playerRigidbody.AddForce(Vector2.up * (jumpPower * 10), ForceMode2D.Impulse);
-            jumping = true;
-            jump++;
-            playerSpriteRenderer.color = Color.red;
+            _playerRigidbody.AddForce(Vector2.up * (_jumpPower * 10), ForceMode2D.Impulse);
+            _jumping = true;
+            _jump++;
+            _playerSpriteRenderer.color = Color.red;
             StartCoroutine(EnableGroundCheckAfterJump());
         }
 
         private void ImpactJump()
         {
-            if (!doubleJumpEnable) return;
+            if (!_doubleJumpEnable) return;
 
-            fireInput = playerInputs.Player.FireDirection.ReadValue<Vector2>();
-            dashing = true;
-            playerRigidbody.AddForce(-fireInput * (dashPower * 10), ForceMode2D.Impulse);
-            doubleJumpEnable = false;
+            _fireInput = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
+            _dashing = true;
+            _playerRigidbody.AddForce(-_fireInput * (_dashPower * 10), ForceMode2D.Impulse);
+            _doubleJumpEnable = false;
             StartCoroutine(EnableGroundCheckAfterJump());
         }
 
         private IEnumerator EnableGroundCheckAfterJump()
         {
-            groundCheckEnabled = false;
-            yield return wait;
-            groundCheckEnabled = true;
+            _groundCheckEnabled = false;
+            yield return _wait;
+            _groundCheckEnabled = true;
         }
 
         private bool IsGrounded()
         {
-            Bounds bounds = playerCollider.bounds;
-            boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
-                        Vector2.down * (bounds.extents.y + groundCheckHeight / 2);
-            boxSize = new Vector2(bounds.size.x, groundCheckHeight);
-            Collider2D groundBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, groundMask);
+            Bounds bounds = _playerCollider.bounds;
+            _boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
+                        Vector2.down * (bounds.extents.y + _groundCheckHeight / 2);
+            _boxSize = new Vector2(bounds.size.x, _groundCheckHeight);
+            Collider2D groundBox = Physics2D.OverlapBox(_boxCenter, _boxSize, 0f, _groundMask);
 
             return groundBox;
         }
 
         private bool IsWalled()
         {
-            Bounds bounds = playerCollider.bounds;
-            boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
-                        Vector2.down * (bounds.extents.y + groundCheckHeight / 2f);
-            boxSize = new Vector2(bounds.size.x, groundCheckHeight);
-            Collider2D wallBox = Physics2D.OverlapBox(boxCenter, boxSize, 0f, wallMask);
+            Bounds bounds = _playerCollider.bounds;
+            _boxCenter = new Vector2(bounds.center.x, bounds.center.y) +
+                        Vector2.down * (bounds.extents.y + _groundCheckHeight / 2f);
+            _boxSize = new Vector2(bounds.size.x, _groundCheckHeight);
+            Collider2D wallBox = Physics2D.OverlapBox(_boxCenter, _boxSize, 0f, _wallMask);
             
-            return wallBox && !IsGrounded() && !hasToWallJump;
+            return wallBox && !IsGrounded() && !_isWallJumping;
         }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.gameObject.GetComponent<WallController>())
-                wallPos = col.transform.position;
+            if (col.gameObject.layer == _wallMask) return;
+            _wallPos = col.transform.position;
+            _wallJumpDirection = _wallPos.x < transform.position.x ? Direction.Right : Direction.Left;
         }
 
         private void WallJump()
         {
-            hasToWallJump = true;
-            Debug.Log("Propulsion du mur");
-            playerRigidbody.AddForce(new Vector2(-wallPos.x, 0) * (dashPower * 10), ForceMode2D.Impulse);
+            _isWallJumping = true;
+            Vector2 force = _wallJumpDirection == Direction.Right
+                ? new Vector2(_dashPower * 10, 0)
+                : new Vector2(-_dashPower * 10, 0);
+            print(force);
+            _playerRigidbody.AddForce(force, ForceMode2D.Impulse);
         }
 
         private void HandleGravity()
         {
-            if (groundCheckEnabled && IsGrounded() && !IsWalled())
+            if (_groundCheckEnabled && IsGrounded() && !IsWalled())
             {
-                hasThePos = false;
-                playerRigidbody.gravityScale = initialGravityScale;
+                _hasThePos = false;
+                _playerRigidbody.gravityScale = _initialGravityScale;
                 ResetJumpingValue();
             }
-            else if (jumping && playerRigidbody.velocity.y < 0)
+            else if (_jumping && _playerRigidbody.velocity.y < 0)
             {
-                dashing = false;
-                playerRigidbody.gravityScale = initialGravityScale * jumpFallGravityMultiplier;
+                _dashing = false;
+                _playerRigidbody.gravityScale = _initialGravityScale * _jumpFallGravityMultiplier;
             }
-            else if(!groundCheckEnabled && !IsGrounded() || !IsWalled())
+            else if(!_groundCheckEnabled && !IsGrounded() || !IsWalled())
             {
-                playerRigidbody.gravityScale = initialGravityScale;
+                _playerRigidbody.gravityScale = _initialGravityScale;
             }
         }
 
@@ -177,15 +182,15 @@ namespace _Scripts
         {
             if (!IsWalled()) return;
             
-            if (!hasThePos)
+            if (!_hasThePos)
             {
-                pos = transform.position;
-                hasThePos = true;
+                _pos = transform.position;
+                _hasThePos = true;
             }
             
-            transform.position = pos;
+            transform.position = _pos;
             // playerRigidbody.gravityScale = 0;
-            playerSpriteRenderer.color = Color.magenta;
+            _playerSpriteRenderer.color = Color.magenta;
             
             StartCoroutine(WallDescent());
             ResetJumpingValue();
@@ -194,26 +199,31 @@ namespace _Scripts
         private IEnumerator WallDescent()
         {
             yield return new WaitForEndOfFrame();
-            pos = new Vector3(pos.x, pos.y - descendSpeed / 100, pos.z);
+            _pos = new Vector3(_pos.x, _pos.y - _descendSpeed / 100, _pos.z);
         }
 
         private void ResetJumpingValue()
         {
-            jumping = false;
-            dashing = false;
-            doubleJumpEnable = true;
-            hasToWallJump = false;
-            jump = 0;
+            _jumping = false;
+            _dashing = false;
+            _doubleJumpEnable = true;
+            _isWallJumping = false;
+            _jump = 0;
             if(!IsWalled())
-                playerSpriteRenderer.color = Color.green;
+                _playerSpriteRenderer.color = Color.green;
         }
 
         private void Move()
         {
-            moveInput = playerInputs.Player.Move.ReadValue<Vector2>();
+            _moveInput = _playerInputs.Player.Move.ReadValue<Vector2>();
             
-            if (!dashing)
-                playerRigidbody.velocity = new Vector2(moveInput.x * speed, playerRigidbody.velocity.y);
+            if (!_dashing && !_isWallJumping)
+                _playerRigidbody.velocity = new Vector2(_moveInput.x * _speed, _playerRigidbody.velocity.y);
         }
     }
+}
+
+public enum Direction
+{
+    Left,Right
 }

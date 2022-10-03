@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerRigidbody: {fileID: 6680542856012886100}
-  _playerCollider: {fileID: 0}
+  _playerCollider: {fileID: 4399177545087318345}
   _playerSpriteRenderer: {fileID: 5695447102205724992}
   _speed: 12
   _groundCheckHeight: 0.05
@@ -198,6 +198,11 @@ MonoBehaviour:
   _gravity: 5
   _jumpInputTimer: 0.3
   _coyoteTime: 0.15
+  _wallOffset: 0.5
+  _wallRadius: 0.5
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!70 &4399177545087318345
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

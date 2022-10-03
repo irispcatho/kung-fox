@@ -4,10 +4,15 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum Direction
+{
+    Left,Right
+}
 namespace _Scripts
 {
     public class PlayerController : MonoBehaviour
     {
+        #region Variables
         [Header("References")]
         [SerializeField] private Rigidbody2D _playerRigidbody;
         [SerializeField] private Collider2D _playerCollider;
@@ -47,6 +52,7 @@ namespace _Scripts
         private Vector3 _wallPos;
         private bool _isWallJumping;
         private Direction _wallJumpDirection; 
+        #endregion
             
         private void Awake()
         {
@@ -235,7 +241,3 @@ namespace _Scripts
     }
 }
 
-public enum Direction
-{
-    Left,Right
-}

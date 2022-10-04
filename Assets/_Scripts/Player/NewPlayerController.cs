@@ -31,12 +31,12 @@ public class NewPlayerController : MonoBehaviour
     private Vector2 _currentInputs;
     private float _lastNonNullX;
 
-    [Header("Jump")] [SerializeField] [Tooltip("The timer between two jumps")]
+    [Header("Jump")] [SerializeField] [Tooltip("The timer between two jumps.")]
     private float _timeMinBetweenJump;
 
     [SerializeField] private float _jumpForce;
 
-    [SerializeField] [Range(-40, -1)] [Tooltip("The timer between two jumps")]
+    [SerializeField] [Range(-40, -1)] [Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")]
     private float _velocityFallMin;
 
     [SerializeField] [Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")]

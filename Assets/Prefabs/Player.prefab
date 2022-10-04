@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6070718288494517228}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8408, z: 0}
-  m_LocalScale: {x: 1, y: 2.6816, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6680542856012886097}
@@ -93,7 +93,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6680542856012886097}
-  - component: {fileID: 2058557028887830199}
   - component: {fileID: 6680542856012886100}
   - component: {fileID: 919088410}
   - component: {fileID: 4399177545087318345}
@@ -113,42 +112,13 @@ Transform:
   m_GameObject: {fileID: 6680542856012886101}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.89, y: -2.68, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.9, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 498187650829467515}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2058557028887830199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6680542856012886101}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bb914d2e6e637849b158da2498a0561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerRigidbody: {fileID: 6680542856012886100}
-  _playerCollider: {fileID: 4399177545087318345}
-  _playerSpriteRenderer: {fileID: 5695447102205724992}
-  _speed: 12
-  _groundCheckHeight: 0.05
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _wallMask:
-    serializedVersion: 2
-    m_Bits: 128
-  _disableGroundCheckTime: 0.025
-  _jumpPower: 10
-  _jumpFallGravityMultiplier: 1.85
-  _jumpGravityMultiplier: 1.98
-  _dashPower: 15
-  _descendSpeed: 5
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4
@@ -185,7 +155,7 @@ MonoBehaviour:
   _playerRigidbody2D: {fileID: 6680542856012886100}
   _playerCollider: {fileID: 4399177545087318345}
   _playerSpriteRenderer: {fileID: 5695447102205724992}
-  _groundOffset: -0.5
+  _groundOffset: -0.65
   _groundRadius: 0.5
   _groundMask:
     serializedVersion: 2
@@ -193,16 +163,19 @@ MonoBehaviour:
   _moveSpeed: 15
   _timeMinBetweenJump: 0.5
   _jumpForce: 16
-  _velocityFallMin: -10
-  _gravityUpJump: 1
+  _velocityFallMin: -20
+  _gravityUpJump: 2.83
   _gravity: 5
   _jumpInputTimer: 0.3
   _coyoteTime: 0.15
-  _wallOffset: 0.5
-  _wallRadius: 0.5
+  _dashPower: 3.01
+  _controllerMalusDash: 2.91
+  _wallOffset: 0.32
+  _wallRadius: 0.29
   _wallMask:
     serializedVersion: 2
     m_Bits: 128
+  _descendSpeed: 2
 --- !u!70 &4399177545087318345
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -216,6 +189,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0000038146973, y: 0.84581757}
-  m_Size: {x: 0.9613571, y: 2.6916351}
+  m_Offset: {x: -0.0000038146973, y: 0.00073100394}
+  m_Size: {x: 0.9613571, y: 1.0014621}
   m_Direction: 0

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8f5bf7ead4b180541bc9c3f9c191a8a1
+guid: 11371b6adbd025941928cc5efff00761
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -116,7 +116,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: run-Sheet_0
+      name: dash_side-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -130,14 +130,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5ecabb5b60a0a145a8c4a473c5abf0e
-      internalID: -591778534
+      spriteID: 9f321eb4b4bff0249bc8bd51a3409157
+      internalID: -804084519
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: run-Sheet_1
+      name: dash_side-Sheet_1
       rect:
         serializedVersion: 2
         x: 32
@@ -151,14 +151,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 306f683c3eea065419c51386baa6baf8
-      internalID: 183952010
+      spriteID: 5bdfab94dd3deaf4091970cfcd0b2049
+      internalID: 2021436704
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: run-Sheet_2
+      name: dash_side-Sheet_2
       rect:
         serializedVersion: 2
         x: 64
@@ -172,14 +172,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cf9f93c897757224c82ece3b6c6f186e
-      internalID: 582376031
+      spriteID: 18d1ae8ee6112e24bb63bed6f4f086b6
+      internalID: -1748795581
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: run-Sheet_3
+      name: dash_side-Sheet_3
       rect:
         serializedVersion: 2
         x: 96
@@ -193,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73b46516646513241b4c0e658ad043cf
-      internalID: 750891024
+      spriteID: 9f9aa2f9f050e3c479cb79599085186d
+      internalID: 586652600
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: run-Sheet_4
+      name: dash_side-Sheet_4
       rect:
         serializedVersion: 2
         x: 128
@@ -214,14 +214,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aad2903b9b1116f4da932503308bae04
-      internalID: 2046069705
+      spriteID: 8fc606332ffbc1c44a2b403edeea7e20
+      internalID: -725207325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: run-Sheet_5
+      name: dash_side-Sheet_5
       rect:
         serializedVersion: 2
         x: 160
@@ -235,8 +235,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: abb7350d893fa83419c28b4f7b220441
-      internalID: 330012384
+      spriteID: 183cffd72e8b78e49b392683f7ad7366
+      internalID: 39584813
       vertices: []
       indices: 
       edges: []
@@ -252,12 +252,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      run-Sheet_3: 750891024
-      run-Sheet_4: 2046069705
-      run-Sheet_1: 183952010
-      run-Sheet_5: 330012384
-      run-Sheet_2: 582376031
-      run-Sheet_0: -591778534
+      dash_side-Sheet_5: 39584813
+      dash_side-Sheet_1: 2021436704
+      dash_side-Sheet_4: -725207325
+      dash_side-Sheet_0: -804084519
+      dash_side-Sheet_3: 586652600
+      dash_side-Sheet_2: -1748795581
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

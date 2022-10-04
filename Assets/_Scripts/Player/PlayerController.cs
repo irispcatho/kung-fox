@@ -4,10 +4,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum Direction
-{
-    Left,Right
-}
+
 namespace _Scripts
 {
     public class PlayerController : MonoBehaviour

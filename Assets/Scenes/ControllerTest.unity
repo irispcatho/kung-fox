@@ -740,18 +740,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
-      propertyPath: _wallOffset
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
-      propertyPath: _wallRadius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
-      propertyPath: _wallMask.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
     - target: {fileID: 6680542856012886097, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: m_RootOrder
       value: 1

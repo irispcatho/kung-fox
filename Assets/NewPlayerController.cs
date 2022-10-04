@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum Direction
+{
+    Left,Right
+}
 public class NewPlayerController : MonoBehaviour
 {
     #region Variables
@@ -47,6 +51,8 @@ public class NewPlayerController : MonoBehaviour
     private bool _isWalled;
     private bool _hasThePos;
     private Vector3 _pos;
+    private Direction _wallJumpDirection;
+    private Vector2 _wallPos;
 
     #endregion
     private void Awake()
@@ -69,7 +75,6 @@ public class NewPlayerController : MonoBehaviour
     
     private void HandleJump()
     {
-        Debug.Log("Jump");
         _timerNoJump -= Time.deltaTime;
         _timerSinceJumpPressed += Time.deltaTime;
 
@@ -91,16 +96,37 @@ public class NewPlayerController : MonoBehaviour
             _playerRigidbody2D.gravityScale = _gravity;
         }
 
+        if (_isWalled && _inputJump && _playerRigidbody2D.velocity.y <= 0)
+        {
+            Debug.Log("Wall jump");
+            Vector2 force = _wallJumpDirection == Direction.Right
+                ? new Vector2(_jumpForce * 10, 0)
+                : new Vector2(-_jumpForce * 10, 0);
+            // _playerRigidbody2D.velocity = force;
+        }
+
 
         if (_playerRigidbody2D.velocity.y < _velocityFallMin)
         {
             _playerRigidbody2D.velocity = new Vector2(_playerRigidbody2D.velocity.x, _velocityFallMin);
+            _playerRigidbody2D.gravityScale = _gravity;
         }
+        
+        if(_isGrounded)
+            _hasThePos = false;
     }
 
     private void HandleWallCollision()
     {
-        _playerRigidbody2D.gravityScale = _isWalled && !_isGrounded ? 0 : _gravity;
+        if (!_isWalled) return;
+            
+        if (!_hasThePos)
+        {
+            _pos = transform.position;
+            _hasThePos = true;
+        }
+            
+        transform.position = _pos;
     }
 
     private void HandleGrounded()
@@ -118,10 +144,18 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleWalled()
     {
-        Vector2 point = transform.position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
+        Vector3 position = transform.position;
+        Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
         bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersWall, _wallMask) > 0;
         
         _isWalled = currentWalled;
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.layer != _wallMask) return;
+        _wallPos = col.transform.position;
+        _wallJumpDirection = _wallPos.x < transform.position.x ? Direction.Right : Direction.Left;
     }
 
     private void OnDrawGizmos()

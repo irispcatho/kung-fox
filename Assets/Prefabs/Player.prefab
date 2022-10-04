@@ -93,8 +93,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6680542856012886097}
-  - component: {fileID: 6680542856012886100}
   - component: {fileID: 919088410}
+  - component: {fileID: 6680542856012886100}
   - component: {fileID: 4399177545087318345}
   m_Layer: 0
   m_Name: Player
@@ -119,27 +119,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &6680542856012886100
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6680542856012886101}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 10
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 1
-  m_Constraints: 4
 --- !u!114 &919088410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,20 +141,42 @@ MonoBehaviour:
     m_Bits: 64
   _moveSpeed: 15
   _timeMinBetweenJump: 0.5
-  _jumpForce: 16
+  _jumpForce: 15.87
   _velocityFallMin: -20
   _gravityUpJump: 2.83
   _gravity: 5
   _jumpInputTimer: 0.3
   _coyoteTime: 0.15
-  _dashPower: 3.01
+  _dashForce: 3.43
   _controllerMalusDash: 2.91
-  _wallOffset: 0.32
-  _wallRadius: 0.29
+  _wallOffset: 0.48
+  _wallSize: {x: 0, y: 0}
   _wallMask:
     serializedVersion: 2
     m_Bits: 128
   _descendSpeed: 2
+  _wallJumpForce: 17.2
+--- !u!50 &6680542856012886100
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6680542856012886101}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 10
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!70 &4399177545087318345
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

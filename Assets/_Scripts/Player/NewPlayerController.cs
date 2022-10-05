@@ -256,7 +256,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isDashing && !_isWalled && !_isWallJumping && _)
+        if (!_isDashing && !_isWalled && !_isWallJumping)
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
         else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWallJumping)
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed / _controllerMalusDash,

@@ -16,7 +16,7 @@ public class NewPlayerController : MonoBehaviour
     [Header("References")] [SerializeField]
     private Rigidbody2D _playerRigidbody2D;
 
-    [SerializeField] private Collider2D _playerCollider;
+    [SerializeField] private Animator _playerAnimator;
     [SerializeField] private SpriteRenderer _playerSpriteRenderer;
     private PlayerInputs _playerInputs;
 
@@ -70,7 +70,7 @@ public class NewPlayerController : MonoBehaviour
     private bool _doubleJumpEnable = true;
     private Vector2 _dashInputValue;
 
-    [Header("Wall")] [SerializeField] [Range(1, 50)]
+    [Header("Wall")] [SerializeField] [Range(-10, 10)]
     private float _wallOffset;
     
     [SerializeField] private Vector2 _wallSize;
@@ -144,6 +144,8 @@ public class NewPlayerController : MonoBehaviour
             _timerSinceJumpPressed = 0;
 
         if (_currentInputs.x != 0f) _lastNonNullX = _currentInputs.x;
+        
+        _playerAnimator.SetInteger("InputX", (int)_lastNonNullX);
     }
 
     private void HandleJump()

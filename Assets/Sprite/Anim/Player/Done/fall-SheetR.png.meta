@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a162105591fb1274983b7144fd251c65
+guid: 286d8fe38fb65fd4b97fe70d1b9cd75e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -128,7 +128,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: wallslide-Sheet_0
+      name: fall-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -142,14 +142,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2868cc7758e4778428b395cc8b3dcc62
-      internalID: 139969893
+      spriteID: 31fc42324646c1545a4458fa83ffb45a
+      internalID: 1369532818
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: wallslide-Sheet_1
+      name: fall-Sheet_1
       rect:
         serializedVersion: 2
         x: 32
@@ -163,8 +163,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91e7991e54528c346b0d80f179ec551a
-      internalID: 970107945
+      spriteID: fac1e9417630536479c7fa9f6f5147e1
+      internalID: -335617231
       vertices: []
       indices: 
       edges: []
@@ -180,8 +180,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      wallslide-Sheet_1: 970107945
-      wallslide-Sheet_0: 139969893
+      fall-Sheet_0: 1369532818
+      fall-Sheet_1: -335617231
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

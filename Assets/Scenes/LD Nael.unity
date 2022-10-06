@@ -2585,7 +2585,7 @@ GameObject:
   - component: {fileID: 800863250}
   - component: {fileID: 800863249}
   - component: {fileID: 800863248}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2706,7 +2706,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _dashForce
-      value: 2
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _jumpForce
@@ -2718,7 +2718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _wallOffset
-      value: 0.2
+      value: 0.24
       objectReference: {fileID: 0}
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _wallSize.x
@@ -2736,6 +2736,10 @@ PrefabInstance:
       propertyPath: _groundRadius
       value: 0.23
       objectReference: {fileID: 0}
+    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: _playerDisplay
+      value: 
+      objectReference: {fileID: 1824055142}
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _playerAnimator
       value: 
@@ -3726,7 +3730,7 @@ GameObject:
   - component: {fileID: 1269248329}
   - component: {fileID: 1269248328}
   - component: {fileID: 1269248327}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4103,7 +4107,7 @@ GameObject:
   - component: {fileID: 1429562787}
   - component: {fileID: 1429562786}
   - component: {fileID: 1429562785}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4878,7 +4882,7 @@ GameObject:
   - component: {fileID: 1698734654}
   - component: {fileID: 1698734653}
   - component: {fileID: 1698734652}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

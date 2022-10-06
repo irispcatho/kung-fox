@@ -17,6 +17,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private Rigidbody2D _playerRigidbody2D;
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private SpriteRenderer _playerSpriteRenderer;
+    [SerializeField] private GameObject _playerDisplay;
     private PlayerInputs _playerInputs;
 
     [Header("GroundCheck")] 
@@ -28,19 +29,19 @@ public class NewPlayerController : MonoBehaviour
     private float _timeSinceGrounded;
 
     [Header("Movement")] 
-    [SerializeField] [Range(1, 50)]
+    [SerializeField, Range(1, 50)]
     private float _moveSpeed;
     private Vector2 _currentInputs;
     private float _lastNonNullX;
 
     [Header("Jump")] 
     [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)] private float _timeMinBetweenJump;
-    [SerializeField] [Range(1, 50)] private float _jumpForce;
+    [SerializeField, Range(1, 50)] private float _jumpForce;
     [SerializeField, Range(-40, -1), Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")] private float _velocityFallMin;
-    [SerializeField] [Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
-    [SerializeField] [Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
-    [SerializeField] [Range(0.1f, 3)] private float _jumpInputTimer;
-    [SerializeField] [Range(0.01f, 0.99f)] private float _coyoteTime;
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
+    [SerializeField, Range(0.1f, 3)] private float _jumpInputTimer;
+    [SerializeField, Range(0.01f, 0.99f)] private float _coyoteTime;
     private float _timerNoJump;
     private float _timerSinceJumpPressed;
     private bool _inputJump;
@@ -53,10 +54,13 @@ public class NewPlayerController : MonoBehaviour
     private bool _isDashing;
     private bool _doubleJumpEnable = true;
     private Vector2 _dashInputValue;
+    private Vector3 _joystickDirection;
+    private float _joystickAngleFromRight;
+    private static readonly int InputAngle = Animator.StringToHash("InputAngle");
 
     [Header("Wall")] 
     [SerializeField, Range(-10, 10)] private float _wallOffset;
-    [SerializeField] private Vector2 _wallSize;
+    [SerializeField] private float _wallRadius;
     [SerializeField] private LayerMask _wallMask;
     [SerializeField, Range(1, 10)] private float _descendSpeed;
     [SerializeField, Range(1, 50)] private float _wallJumpForce;
@@ -67,11 +71,6 @@ public class NewPlayerController : MonoBehaviour
     private Direction _wallJumpDirection;
     private Vector2 _wallPos;
     private bool _isWallJumping;
-    
-    
-    private static readonly float VelocityY = Animator.StringToHash("VelocityY");
-    private static readonly int Jump = Animator.StringToHash("Jump");
-    private static readonly int InputX = Animator.StringToHash("InputX");
 
     #endregion
 
@@ -119,7 +118,7 @@ public class NewPlayerController : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         // Gizmos.DrawWireCube(position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset, _size);
-        Gizmos.DrawWireCube(position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset, _wallSize);
+        Gizmos.DrawWireSphere(position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset, _wallRadius);
     }
 
     private void HandleInput()
@@ -144,6 +143,13 @@ public class NewPlayerController : MonoBehaviour
         // jump
         _playerAnimator.SetBool("Jump", _isJumping);
         _playerAnimator.SetFloat("VelocityY", _playerRigidbody2D.velocity.y);
+        
+        // wall
+        _playerAnimator.SetBool("IsWalled", _isWalled);
+        _playerAnimator.SetBool("IsGrounded", _isGrounded);
+        
+        // dash
+        _playerAnimator.SetBool("IsDashing", _isDashing);
     }
 
     private void HandleJump()
@@ -203,7 +209,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleWallCollision()
     {
-        if (!_isWalled) return;
+        if (_isGrounded || !_isWalled) return;
 
         if (!_hasThePos)
         {
@@ -212,6 +218,7 @@ public class NewPlayerController : MonoBehaviour
         }
 
         transform.position = _pos;
+        // _playerDisplay.transform.position = new Vector3(_wallJumpDirection == Direction.Left ? _pos.x - 0.24f : _pos.x + 0.24f, _pos.y, _pos.z);
         StartCoroutine(WallDescent());
     }
 
@@ -236,28 +243,60 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleDash()
     {
-        if (!_doubleJumpEnable || !_dashInput) return;
+        if (!_doubleJumpEnable || !_dashInput || _isGrounded || _isWalled) return;
+        
         _isDashing = true;
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
         _doubleJumpEnable = false;
+        
+        _joystickDirection = -_dashInputValue.normalized;
+        _joystickAngleFromRight = Vector3.Angle(_joystickDirection, Vector3.right);
+        Debug.Log(_joystickAngleFromRight);
+        
+        switch (_joystickAngleFromRight)
+        {
+            case < 45f:
+                _playerAnimator.SetFloat(InputAngle, 1);
+                break;
+            case > 135f:
+                _playerAnimator.SetFloat(InputAngle, 1);
+                _playerSpriteRenderer.flipX = true;
+                break;
+            default:
+            {
+                switch (_joystickDirection.y)
+                {
+                    case > 0f:
+                        _playerAnimator.SetFloat(InputAngle, 0.5f);
+                        break;
+                    case < 0f when !_isGrounded:
+                        _playerAnimator.SetFloat(InputAngle, 0);
+                        break;
+                }
+
+                break;
+            }
+        }
     }
 
     private void HandleWalled()
     {
         Vector3 position = transform.position;
         Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
-        bool currentWalled = Physics2D.OverlapBoxNonAlloc(point, _wallSize, 0, _collidersWall, _wallMask) > 0;
+        bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersGround, _wallMask) > 0;
         _isWalled = currentWalled;
 
-        if (_isWalled)
-            if (_collidersWall[0].transform != null)
-            {
-                _wallPos = _collidersWall[0].transform.position;
-                _wallJumpDirection = _wallPos.x < transform.position.x + _wallSize.x * 2
-                    ? Direction.Right
-                    : Direction.Left;
-            }
+        // if (_isWalled)
+        // {
+        //     if (_collidersWall[0].transform != null)
+        //     {
+        //         _wallPos = _collidersWall[0].transform.position;
+        //         _wallJumpDirection = _wallPos.x < transform.position.x
+        //             ? Direction.Right
+        //             : Direction.Left;
+        //     }
+        // }
     }
 
     private void HandleMovement()

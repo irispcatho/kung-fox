@@ -180,6 +180,7 @@ MonoBehaviour:
     m_Bits: 128
   _descendSpeed: 2
   _wallJumpForce: 17.2
+  _wallGravity: 0.39
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4

@@ -64,6 +64,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private LayerMask _wallMask;
     [SerializeField, Range(1, 10)] private float _descendSpeed;
     [SerializeField, Range(1, 50)] private float _wallJumpForce;
+    [SerializeField, Range(0, 3)] private float _wallGravity;
     private readonly Collider2D[] _collidersWall = new Collider2D[1];
     private bool _isWalled;
     private bool _hasThePos;
@@ -180,12 +181,17 @@ public class NewPlayerController : MonoBehaviour
         if (!_isGrounded)
         {
             _isJumping = true;
-            if (_playerRigidbody2D.velocity.y < 0)
+
+            if (_playerRigidbody2D.velocity.y < 0 && !_isWalled)
+            {
                 _playerRigidbody2D.gravityScale = _gravity;
-            else
+            }
+            else if (_playerRigidbody2D.velocity.y > 0 && !_isWalled)
+            {
                 _playerRigidbody2D.gravityScale = _inputJump ? _gravityUpJump : _gravity;
+            }
         }
-        else
+        else if(_isGrounded || _isWalled)
         {
             _playerRigidbody2D.gravityScale = _gravity;
         }
@@ -217,9 +223,8 @@ public class NewPlayerController : MonoBehaviour
             _hasThePos = true;
         }
 
-        transform.position = _pos;
-        // _playerDisplay.transform.position = new Vector3(_wallJumpDirection == Direction.Left ? _pos.x - 0.24f : _pos.x + 0.24f, _pos.y, _pos.z);
-        StartCoroutine(WallDescent());
+        transform.position = new Vector3(_pos.x, transform.position.y, transform.position.z);
+        // StartCoroutine(WallDescent());
     }
 
     private IEnumerator WallDescent()
@@ -257,10 +262,10 @@ public class NewPlayerController : MonoBehaviour
         switch (_joystickAngleFromRight)
         {
             case < 45f:
-                _playerAnimator.SetFloat(InputAngle, 1);
+                _playerAnimator.SetInteger("InputAngle", 1);
                 break;
             case > 135f:
-                _playerAnimator.SetFloat(InputAngle, 1);
+                _playerAnimator.SetInteger("InputAngle", 1);
                 _playerSpriteRenderer.flipX = true;
                 break;
             default:
@@ -268,10 +273,10 @@ public class NewPlayerController : MonoBehaviour
                 switch (_joystickDirection.y)
                 {
                     case > 0f:
-                        _playerAnimator.SetFloat(InputAngle, 0.5f);
+                        _playerAnimator.SetInteger("InputAngle", 2);
                         break;
                     case < 0f when !_isGrounded:
-                        _playerAnimator.SetFloat(InputAngle, 0);
+                        _playerAnimator.SetInteger("InputAngle", 0);
                         break;
                 }
 
@@ -286,6 +291,9 @@ public class NewPlayerController : MonoBehaviour
         Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
         bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersGround, _wallMask) > 0;
         _isWalled = currentWalled;
+        
+        if(_isWalled)
+            _playerRigidbody2D.gravityScale = _wallGravity;
 
         // if (_isWalled)
         // {

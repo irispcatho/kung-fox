@@ -14,6 +14,7 @@ public class NewPlayerController : MonoBehaviour
 {
     #region Variables
 
+    public static NewPlayerController Instance;
     [Header("References")] 
     [SerializeField] private Rigidbody2D _playerRigidbody2D;
     [SerializeField] private Animator _playerAnimator;
@@ -51,12 +52,13 @@ public class NewPlayerController : MonoBehaviour
     [Header("Dash")] 
     [SerializeField, Range(1, 30)] private float _dashForce;
     [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
-    [SerializeField] private int _dashes;
-    private int _remainingDashes;
+    [SerializeField] private int _dashes = 3;
+    [SerializeField] private SpriteRenderer[] _dashBalls;
+    [SerializeField] private float _dashTimer;
+    public int _remainingDashes;
     private bool _inputDash;
     private bool _inputDownDash;
     private bool _isDashing;
-    private bool _dashEnable = true;
     private Vector2 _dashInputValue;
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
@@ -68,7 +70,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField, Range(1, 10)] private float _descendSpeed;
     [SerializeField, Range(1, 50)] private float _wallJumpForce;
     [SerializeField, Range(0, 3)] private float _wallGravity;
-    private readonly Collider2D[] _collidersWall = new Collider2D[1];
+    private Collider2D[] _collidersWall = new Collider2D[1];
     private bool _isWalled;
     private bool _hasThePos;
     private Vector3 _pos;
@@ -80,6 +82,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         _playerInputs = new PlayerInputs();
         _remainingDashes = _dashes;
     }
@@ -144,6 +147,16 @@ public class NewPlayerController : MonoBehaviour
     private void DecreaseDashRemaining(InputAction.CallbackContext obj)
     {
         _remainingDashes--;
+
+        foreach (SpriteRenderer ball in _dashBalls)
+        {
+            DashBallsController controller = ball.GetComponent<DashBallsController>();
+            if (!controller.IsCharged) continue;
+            controller.BallSpriteRenderer.color = Color.white;
+            controller.IsCharged = false;
+            controller.InitiateTimer(_dashTimer);
+            return;
+        }                    
     }
 
     private void HandleAnimationParameters()
@@ -175,11 +188,6 @@ public class NewPlayerController : MonoBehaviour
         {
             _playerRigidbody2D.velocity = new Vector2(_playerRigidbody2D.velocity.x, _jumpForce);
             _timerNoJump = _timeMinBetweenJump;
-        }
-
-        if (_inputDash)
-        {
-            _dashEnable = _remainingDashes >= 0;
         }
 
         if (_isWalled && _inputJump)
@@ -217,7 +225,6 @@ public class NewPlayerController : MonoBehaviour
         {
             _hasThePos = false;
             _isWalled = false;
-            _dashEnable = false;
             _isDashing = false;
             _isWallJumping = false;
             _isJumping = false;
@@ -259,7 +266,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleDash(InputAction.CallbackContext obj)
     {
-        if (_isGrounded || _isWalled) return;
+        if (_isGrounded || _isWalled || _remainingDashes < 0) return;
         
         _isDashing = true;
         
@@ -298,7 +305,7 @@ public class NewPlayerController : MonoBehaviour
     {
         Vector3 position = transform.position;
         Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
-        bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersGround, _wallMask) > 0;
+        bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersWall, _wallMask) > 0;
         _isWalled = currentWalled;
         
         if(_isWalled)

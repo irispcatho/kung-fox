@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 public enum Direction
@@ -50,13 +51,15 @@ public class NewPlayerController : MonoBehaviour
     [Header("Dash")] 
     [SerializeField, Range(1, 30)] private float _dashForce;
     [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
-    private bool _dashInput;
+    [SerializeField] private int _dashes;
+    private int _remainingDashes;
+    private bool _inputDash;
+    private bool _inputDownDash;
     private bool _isDashing;
-    private bool _doubleJumpEnable = true;
+    private bool _dashEnable = true;
     private Vector2 _dashInputValue;
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
-    private static readonly int InputAngle = Animator.StringToHash("InputAngle");
 
     [Header("Wall")] 
     [SerializeField, Range(-10, 10)] private float _wallOffset;
@@ -78,6 +81,7 @@ public class NewPlayerController : MonoBehaviour
     private void Awake()
     {
         _playerInputs = new PlayerInputs();
+        _remainingDashes = _dashes;
     }
 
     private void Update()
@@ -126,13 +130,20 @@ public class NewPlayerController : MonoBehaviour
     {
         _currentInputs = _playerInputs.Player.Move.ReadValue<Vector2>();
         _inputJump = _playerInputs.Player.Jump.IsPressed();
-        _dashInput = _playerInputs.Player.Dash.IsPressed();
+        _inputDash = _playerInputs.Player.Dash.IsPressed();
 
+        _playerInputs.Player.Dash.performed += DecreaseDashRemaining;
+        
         if (_inputJump == _playerInputs.Player.Jump.WasPressedThisFrame())
             _timerSinceJumpPressed = 0;
 
         if (_currentInputs.x != 0f) _lastNonNullX = _currentInputs.x;
         HandleAnimationParameters();
+    }
+
+    private void DecreaseDashRemaining(InputAction.CallbackContext obj)
+    {
+        _remainingDashes--;
     }
 
     private void HandleAnimationParameters()
@@ -150,7 +161,7 @@ public class NewPlayerController : MonoBehaviour
         _playerAnimator.SetBool("IsGrounded", _isGrounded);
         
         // dash
-        _playerAnimator.SetBool("IsDashing", _isDashing);
+        _playerAnimator.SetBool("IsDashing", _inputDash);
     }
 
     private void HandleJump()
@@ -163,12 +174,13 @@ public class NewPlayerController : MonoBehaviour
                        && _timerNoJump <= 0 && _timerSinceJumpPressed < _jumpInputTimer)
         {
             _playerRigidbody2D.velocity = new Vector2(_playerRigidbody2D.velocity.x, _jumpForce);
+            Debug.Log("saut");
             _timerNoJump = _timeMinBetweenJump;
         }
 
-        if (_inputJump)
+        if (_inputDash)
         {
-            _doubleJumpEnable = true;
+            _dashEnable = _remainingDashes >= 0;
         }
 
         if (_isWalled && _inputJump)
@@ -206,7 +218,7 @@ public class NewPlayerController : MonoBehaviour
         {
             _hasThePos = false;
             _isWalled = false;
-            _doubleJumpEnable = false;
+            _dashEnable = false;
             _isDashing = false;
             _isWallJumping = false;
             _isJumping = false;
@@ -248,38 +260,36 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleDash()
     {
-        if (!_doubleJumpEnable || !_dashInput || _isGrounded || _isWalled) return;
+        if (!_dashEnable || !_inputDash || _isGrounded || _isWalled) return;
         
         _isDashing = true;
+        
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
-        _doubleJumpEnable = false;
         
         _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_joystickDirection, Vector3.right);
-        Debug.Log(_joystickAngleFromRight);
         
         switch (_joystickAngleFromRight)
         {
             case < 45f:
-                _playerAnimator.SetInteger("InputAngle", 1);
+                _playerAnimator.Play("DashSide");
                 break;
             case > 135f:
-                _playerAnimator.SetInteger("InputAngle", 1);
-                _playerSpriteRenderer.flipX = true;
+                _playerAnimator.Play("DashSide");
+                // _playerSpriteRenderer.flipX = true;
                 break;
             default:
             {
                 switch (_joystickDirection.y)
                 {
                     case > 0f:
-                        _playerAnimator.SetInteger("InputAngle", 2);
+                        _playerAnimator.Play("DashUp");
                         break;
                     case < 0f when !_isGrounded:
-                        _playerAnimator.SetInteger("InputAngle", 0);
+                        _playerAnimator.Play("DashDown");
                         break;
                 }
-
                 break;
             }
         }

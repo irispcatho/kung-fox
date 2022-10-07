@@ -173,6 +173,7 @@ MonoBehaviour:
   _coyoteTime: 0.15
   _dashForce: 2.1
   _controllerMalusDash: 2.91
+  _dashes: 3
   _wallOffset: 0.15
   _wallRadius: 0.16
   _wallMask:

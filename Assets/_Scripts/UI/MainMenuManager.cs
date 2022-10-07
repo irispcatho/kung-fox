@@ -32,7 +32,7 @@ public class MainMenuManager : MonoBehaviour
         yield return new WaitForSeconds(.01f);
         FadeOff?.Invoke();
     }
-
+    
     public void LaunchCredits()
     {
         StartCoroutine(TransiToCredit(true));

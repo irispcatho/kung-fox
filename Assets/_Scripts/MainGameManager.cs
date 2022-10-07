@@ -100,7 +100,6 @@ public class MainGameManager : MonoBehaviour
     void ChangeChronoTextEndGame()
     {
         chronoText.gameObject.transform.position = tpEndChronoText.position;
-        //chronoText.gameObject.GetComponent<RectTransform>().localScale = new Vector2(700, 76);
         var getTime = chronoText.text;
         chronoText.text = $"Time : {getTime}";
         chronoText.alignment = TextAlignmentOptions.Center;

@@ -51,6 +51,7 @@ public class MainMenuManager : MonoBehaviour
             yield return new WaitForSeconds(TimeFadeOn);
             _menus[0].SetActive(!which);
             _menus[1].SetActive(which);
+            _menus[2].SetActive(false);
             FadeOff?.Invoke();
             yield return new WaitForSeconds(TimeFadeOff);
             _canLaunchTransi = true;

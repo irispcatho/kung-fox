@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using DG.Tweening;
+using TMPro;
 
 public class MainGameManager : MonoBehaviour
 {
@@ -17,6 +18,12 @@ public class MainGameManager : MonoBehaviour
     public float TimeFadeOn = 0f;
     public float TimeFadeOff = 0f;
 
+    private float chrono = 0;
+    [SerializeField] private TextMeshProUGUI chronoText = null;
+    [SerializeField] private Transform tpEndChronoText = null;
+    private bool isGameEnded = false;
+    private bool hasMoveChrono = false;
+
 
     public static MainGameManager Instance;
     private void Awake()
@@ -29,6 +36,24 @@ public class MainGameManager : MonoBehaviour
         PlayerManager.Instance.PlayerDeath += PlayerDeath;
         PlayerManager.Instance.PlayerWin += PlayerWin;
         StartCoroutine(StartGame());
+    }
+
+    private void Update()
+    {
+        if (!isGameEnded)
+        {
+            chrono += Time.deltaTime;
+            TimeSpan time = TimeSpan.FromSeconds(chrono);
+            chronoText.text = time.ToString(@"mm\:ss");
+        }
+        else
+        {
+            if (!hasMoveChrono)
+            {
+                
+                hasMoveChrono = true;
+            }
+        }
     }
 
     IEnumerator StartGame()
@@ -61,14 +86,25 @@ public class MainGameManager : MonoBehaviour
 
     private IEnumerator PlayerWinTransi()
     {
+        isGameEnded = true;
+        chronoText.gameObject.transform.DOScale(Vector2.zero, .5f);
         yield return new WaitForSeconds(TimeFadeOn * 3);
         FadeOn?.Invoke();
         yield return new WaitForSeconds(TimeFadeOn);
         win_Text.SetActive(true);
         win_Text.transform.DOScale(Vector3.one, .5f);
+        ChangeChronoTextEndGame();
+        chronoText.gameObject.transform.DOScale(Vector2.one, .5f);
     }
 
-
+    void ChangeChronoTextEndGame()
+    {
+        chronoText.gameObject.transform.position = tpEndChronoText.position;
+        //chronoText.gameObject.GetComponent<RectTransform>().localScale = new Vector2(700, 76);
+        var getTime = chronoText.text;
+        chronoText.text = $"Time : {getTime}";
+        chronoText.alignment = TextAlignmentOptions.Center;
+    }
 
 
 

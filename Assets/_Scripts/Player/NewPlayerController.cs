@@ -96,7 +96,6 @@ public class NewPlayerController : MonoBehaviour
         HandleMovement();
         HandleJump();
         HandleWallCollision();
-        HandleDash();
     }
 
     private void OnEnable()
@@ -133,6 +132,7 @@ public class NewPlayerController : MonoBehaviour
         _inputDash = _playerInputs.Player.Dash.IsPressed();
 
         _playerInputs.Player.Dash.performed += DecreaseDashRemaining;
+        _playerInputs.Player.Dash.performed += HandleDash;
         
         if (_inputJump == _playerInputs.Player.Jump.WasPressedThisFrame())
             _timerSinceJumpPressed = 0;
@@ -174,7 +174,6 @@ public class NewPlayerController : MonoBehaviour
                        && _timerNoJump <= 0 && _timerSinceJumpPressed < _jumpInputTimer)
         {
             _playerRigidbody2D.velocity = new Vector2(_playerRigidbody2D.velocity.x, _jumpForce);
-            Debug.Log("saut");
             _timerNoJump = _timeMinBetweenJump;
         }
 
@@ -236,7 +235,7 @@ public class NewPlayerController : MonoBehaviour
         }
 
         transform.position = new Vector3(_pos.x, transform.position.y, transform.position.z);
-        // StartCoroutine(WallDescent());
+        StartCoroutine(WallDescent());
     }
 
     private IEnumerator WallDescent()
@@ -258,9 +257,9 @@ public class NewPlayerController : MonoBehaviour
         _isGrounded = currentGrounded;
     }
 
-    private void HandleDash()
+    private void HandleDash(InputAction.CallbackContext obj)
     {
-        if (!_dashEnable || !_inputDash || _isGrounded || _isWalled) return;
+        if (_isGrounded || _isWalled) return;
         
         _isDashing = true;
         
@@ -305,23 +304,23 @@ public class NewPlayerController : MonoBehaviour
         if(_isWalled)
             _playerRigidbody2D.gravityScale = _wallGravity;
 
-        // if (_isWalled)
-        // {
-        //     if (_collidersWall[0].transform != null)
-        //     {
-        //         _wallPos = _collidersWall[0].transform.position;
-        //         _wallJumpDirection = _wallPos.x < transform.position.x
-        //             ? Direction.Right
-        //             : Direction.Left;
-        //     }
-        // }
+        if (_isWalled)
+        {
+            if (_collidersWall[0].transform != null)
+            {
+                _wallPos = _collidersWall[0].transform.position;
+                _wallJumpDirection = _wallPos.x < transform.position.x
+                    ? Direction.Right
+                    : Direction.Left;
+            }
+        }
     }
 
     private void HandleMovement()
     {
-        if (!_isDashing && !_isWalled && !_isWallJumping)
+        if (!_isDashing && !_isWalled && !_isWallJumping && !_isDashing)
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
-        else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWallJumping)
+        else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWallJumping && !_isDashing)
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed / _controllerMalusDash,
                 _playerRigidbody2D.velocity.y);
     }

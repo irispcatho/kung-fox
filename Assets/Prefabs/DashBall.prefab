@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6931382296961111177}
   - component: {fileID: 1157985587032001727}
   - component: {fileID: 1241297390898796424}
+  - component: {fileID: 347064296206036961}
   m_Layer: 0
   m_Name: DashBall
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: -559320966, guid: 16860dbf9bf29074daa20e0b48982bef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,3 +100,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BallSpriteRenderer: {fileID: 1157985587032001727}
   IsCharged: 0
+--- !u!95 &347064296206036961
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7678843524366765139}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a044bec1cab968e4281ff0c0c632ffb1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

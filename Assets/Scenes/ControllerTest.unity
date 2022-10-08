@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 1394208567}
   - component: {fileID: 1394208565}
   - component: {fileID: 1394208564}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -839,6 +839,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: _dashTimer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6680542856012886097, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: m_RootOrder
       value: 1

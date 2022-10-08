@@ -12,7 +12,6 @@ public class DashBallsController : MonoBehaviour
     private void Start()
     {
         IsCharged = true;
-        BallSpriteRenderer.color = Color.blue;
     }
 
     public void InitiateTimer(float timer)
@@ -25,7 +24,7 @@ public class DashBallsController : MonoBehaviour
         yield return new WaitForSeconds(timer);
         NewPlayerController.Instance._remainingDashes++;
         IsCharged = true;
-        BallSpriteRenderer.color = Color.blue;
+        BallSpriteRenderer.enabled = true;
         StopCoroutine(WaitForDash(timer));
     }
 }

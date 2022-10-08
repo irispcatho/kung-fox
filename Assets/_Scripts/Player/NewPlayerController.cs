@@ -15,14 +15,14 @@ public class NewPlayerController : MonoBehaviour
     #region Variables
 
     public static NewPlayerController Instance;
-    [Header("References")] 
+    [Header("References")]
     [SerializeField] private Rigidbody2D _playerRigidbody2D;
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private SpriteRenderer _playerSpriteRenderer;
     [SerializeField] private GameObject _playerDisplay;
     private PlayerInputs _playerInputs;
 
-    [Header("GroundCheck")] 
+    [Header("GroundCheck")]
     [SerializeField, Range(-5, 5)] private float _groundOffset;
     [SerializeField, Range(0.1f, 2)] private float _groundRadius;
     [SerializeField] private LayerMask _groundMask;
@@ -30,13 +30,13 @@ public class NewPlayerController : MonoBehaviour
     private bool _isGrounded;
     private float _timeSinceGrounded;
 
-    [Header("Movement")] 
+    [Header("Movement")]
     [SerializeField, Range(1, 50)]
     private float _moveSpeed;
     private Vector2 _currentInputs;
     private float _lastNonNullX;
 
-    [Header("Jump")] 
+    [Header("Jump")]
     [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)] private float _timeMinBetweenJump;
     [SerializeField, Range(1, 50)] private float _jumpForce;
     [SerializeField, Range(-40, -1), Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")] private float _velocityFallMin;
@@ -49,7 +49,7 @@ public class NewPlayerController : MonoBehaviour
     private bool _inputJump;
     private bool _isJumping;
 
-    [Header("Dash")] 
+    [Header("Dash")]
     [SerializeField, Range(1, 30)] private float _dashForce;
     [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
     [SerializeField] private int _dashes = 3;
@@ -63,7 +63,7 @@ public class NewPlayerController : MonoBehaviour
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
 
-    [Header("Wall")] 
+    [Header("Wall")]
     [SerializeField, Range(-10, 10)] private float _wallOffset;
     [SerializeField] private float _wallRadius;
     [SerializeField] private LayerMask _wallMask;
@@ -136,7 +136,7 @@ public class NewPlayerController : MonoBehaviour
 
         _playerInputs.Player.Dash.performed += DecreaseDashRemaining;
         _playerInputs.Player.Dash.performed += HandleDash;
-        
+
         if (_inputJump == _playerInputs.Player.Jump.WasPressedThisFrame())
             _timerSinceJumpPressed = 0;
 
@@ -152,11 +152,11 @@ public class NewPlayerController : MonoBehaviour
         {
             DashBallsController controller = ball.GetComponent<DashBallsController>();
             if (!controller.IsCharged) continue;
-            controller.BallSpriteRenderer.color = Color.white;
+            ball.enabled = false;
             controller.IsCharged = false;
             controller.InitiateTimer(_dashTimer);
             return;
-        }                    
+        }
     }
 
     private void HandleAnimationParameters()
@@ -164,15 +164,15 @@ public class NewPlayerController : MonoBehaviour
         // walk
         _playerAnimator.SetInteger("InputX", (int)_currentInputs.x);
         _playerSpriteRenderer.flipX = _lastNonNullX <= -1;
-        
+
         // jump
         _playerAnimator.SetBool("Jump", _isJumping);
         _playerAnimator.SetFloat("VelocityY", _playerRigidbody2D.velocity.y);
-        
+
         // wall
         _playerAnimator.SetBool("IsWalled", _isWalled);
         _playerAnimator.SetBool("IsGrounded", _isGrounded);
-        
+
         // dash
         _playerAnimator.SetBool("IsDashing", _inputDash);
     }
@@ -210,7 +210,7 @@ public class NewPlayerController : MonoBehaviour
                 _playerRigidbody2D.gravityScale = _inputJump ? _gravityUpJump : _gravity;
             }
         }
-        else if(_isGrounded || _isWalled)
+        else if (_isGrounded || _isWalled)
         {
             _playerRigidbody2D.gravityScale = _gravity;
         }
@@ -267,15 +267,15 @@ public class NewPlayerController : MonoBehaviour
     private void HandleDash(InputAction.CallbackContext obj)
     {
         if (_isGrounded || _isWalled || _remainingDashes < 0) return;
-        
+
         _isDashing = true;
-        
+
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
-        
+
         _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_joystickDirection, Vector3.right);
-        
+
         switch (_joystickAngleFromRight)
         {
             case < 45f:
@@ -286,18 +286,18 @@ public class NewPlayerController : MonoBehaviour
                 // _playerSpriteRenderer.flipX = true;
                 break;
             default:
-            {
-                switch (_joystickDirection.y)
                 {
-                    case > 0f:
-                        _playerAnimator.Play("DashUp");
-                        break;
-                    case < 0f when !_isGrounded:
-                        _playerAnimator.Play("DashDown");
-                        break;
+                    switch (_joystickDirection.y)
+                    {
+                        case > 0f:
+                            _playerAnimator.Play("DashUp");
+                            break;
+                        case < 0f when !_isGrounded:
+                            _playerAnimator.Play("DashDown");
+                            break;
+                    }
+                    break;
                 }
-                break;
-            }
         }
     }
 
@@ -307,8 +307,8 @@ public class NewPlayerController : MonoBehaviour
         Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
         bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersWall, _wallMask) > 0;
         _isWalled = currentWalled;
-        
-        if(_isWalled)
+
+        if (_isWalled)
             _playerRigidbody2D.gravityScale = _wallGravity;
 
         if (_isWalled)
@@ -326,9 +326,14 @@ public class NewPlayerController : MonoBehaviour
     private void HandleMovement()
     {
         if (!_isDashing && !_isWalled && !_isWallJumping && !_isDashing)
+        {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
+        }
+
         else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWallJumping && !_isDashing)
+        {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed / _controllerMalusDash,
                 _playerRigidbody2D.velocity.y);
+        }
     }
 }

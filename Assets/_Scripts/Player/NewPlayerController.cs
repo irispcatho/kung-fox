@@ -94,11 +94,9 @@ public class NewPlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        HandleWalled();
         HandleGrounded();
         HandleMovement();
         HandleJump();
-        HandleWallCollision();
     }
 
     private void OnEnable()
@@ -146,7 +144,8 @@ public class NewPlayerController : MonoBehaviour
 
     private void DecreaseDashRemaining(InputAction.CallbackContext obj)
     {
-        _remainingDashes--;
+        if(_remainingDashes > 0)
+            _remainingDashes--;
 
         foreach (SpriteRenderer ball in _dashBalls)
         {
@@ -190,13 +189,6 @@ public class NewPlayerController : MonoBehaviour
             _timerNoJump = _timeMinBetweenJump;
         }
 
-        if (_isWalled && _inputJump)
-        {
-            _isWallJumping = true;
-            Vector2 force = new(_wallJumpDirection == Direction.Right ? _wallJumpForce : -_wallJumpForce, _dashForce);
-            _playerRigidbody2D.velocity = force;
-        }
-
         if (!_isGrounded)
         {
             _isJumping = true;
@@ -231,25 +223,25 @@ public class NewPlayerController : MonoBehaviour
         }
     }
 
-    private void HandleWallCollision()
-    {
-        if (_isGrounded || !_isWalled) return;
+    //private void HandleWallCollision()
+    //{
+    //    if (_isGrounded || !_isWalled) return;
 
-        if (!_hasThePos)
-        {
-            _pos = transform.position;
-            _hasThePos = true;
-        }
+    //    if (!_hasThePos)
+    //    {
+    //        _pos = transform.position;
+    //        _hasThePos = true;
+    //    }
 
-        transform.position = new Vector3(_pos.x, transform.position.y, transform.position.z);
-        StartCoroutine(WallDescent());
-    }
+    //    transform.position = new Vector3(_pos.x, transform.position.y, transform.position.z);
+    //    StartCoroutine(WallDescent());
+    //}
 
-    private IEnumerator WallDescent()
-    {
-        yield return new WaitForEndOfFrame();
-        _pos = new Vector3(_pos.x, _pos.y - _descendSpeed / 100, _pos.z);
-    }
+    //private IEnumerator WallDescent()
+    //{
+    //    yield return new WaitForEndOfFrame();
+    //    _pos = new Vector3(_pos.x, _pos.y - _descendSpeed / 100, _pos.z);
+    //}
 
     private void HandleGrounded()
     {
@@ -266,7 +258,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleDash(InputAction.CallbackContext obj)
     {
-        if (_isGrounded || _isWalled || _remainingDashes < 0) return;
+        if (_isGrounded || _remainingDashes < 0) return;
 
         _isDashing = true;
 
@@ -301,27 +293,27 @@ public class NewPlayerController : MonoBehaviour
         }
     }
 
-    private void HandleWalled()
-    {
-        Vector3 position = transform.position;
-        Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
-        bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersWall, _wallMask) > 0;
-        _isWalled = currentWalled;
+    //private void HandleWalled()
+    //{
+    //    Vector3 position = transform.position;
+    //    Vector2 point = position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset;
+    //    bool currentWalled = Physics2D.OverlapCircleNonAlloc(point, _wallRadius, _collidersWall, _wallMask) > 0;
+    //    _isWalled = currentWalled;
 
-        if (_isWalled)
-            _playerRigidbody2D.gravityScale = _wallGravity;
+    //    if (_isWalled)
+    //        _playerRigidbody2D.gravityScale = _wallGravity;
 
-        if (_isWalled)
-        {
-            if (_collidersWall[0].transform != null)
-            {
-                _wallPos = _collidersWall[0].transform.position;
-                _wallJumpDirection = _wallPos.x < transform.position.x
-                    ? Direction.Right
-                    : Direction.Left;
-            }
-        }
-    }
+    //    if (_isWalled)
+    //    {
+    //        if (_collidersWall[0].transform != null)
+    //        {
+    //            _wallPos = _collidersWall[0].transform.position;
+    //            _wallJumpDirection = _wallPos.x < transform.position.x
+    //                ? Direction.Right
+    //                : Direction.Left;
+    //        }
+    //    }
+    //}
 
     private void HandleMovement()
     {

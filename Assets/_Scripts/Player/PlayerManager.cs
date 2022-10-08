@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
 {
     public event Action PlayerDeath;
     public event Action PlayerWin;
+    public event Action StartShakeDeath;
 
     [SerializeField] private GameObject fx_Death;
     [SerializeField] private GameObject fx_Win;
@@ -30,16 +31,16 @@ public class PlayerManager : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody2D>();
         MainGameManager.Instance.ResetPosPlayer += ResetPosPlayer;
         MainGameManager.Instance.ResetScalePlayer += ResetScalePlayer;
-
+        transform.position = _spawnPoint.position;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.GetComponent<PlayerKilled>() || collision.gameObject.GetComponent<RockFalling>())
         {
             PlayerDeath?.Invoke();
-            PlayerDeathAnim();
             ShakeCam.Instance.StartShakingCam(0.5f);
-        
+            PlayerDeathAnim();
+
             if (collision.gameObject.GetComponent<RockFalling>())
                 Destroy(collision.gameObject);
         }
@@ -47,7 +48,8 @@ public class PlayerManager : MonoBehaviour
 
         if (collision.gameObject.GetComponent<DestructibleBloc>())
         {
-            ShakeMap.Instance.StartShakingCam(-.3f);
+            //ShakeMap.Instance.StartShakingCam(-.3f);
+            StartShakeDeath?.Invoke();
             Destroy(collision.gameObject);
         }
 

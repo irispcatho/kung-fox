@@ -20,6 +20,7 @@ public class MainGameManager : MonoBehaviour
 
     private float chrono = 0;
     [SerializeField] private TextMeshProUGUI chronoText = null;
+    [SerializeField] private GameObject chronoParent = null;
     [SerializeField] private Transform tpEndChronoText = null;
     private bool isGameEnded = false;
     private bool hasMoveChrono = false;
@@ -87,22 +88,22 @@ public class MainGameManager : MonoBehaviour
     private IEnumerator PlayerWinTransi()
     {
         isGameEnded = true;
-        chronoText.gameObject.transform.DOScale(Vector2.zero, .5f);
+        chronoParent.gameObject.transform.DOScale(Vector2.zero, .5f);
         yield return new WaitForSeconds(TimeFadeOn * 3);
         FadeOn?.Invoke();
         yield return new WaitForSeconds(TimeFadeOn);
         win_Text.SetActive(true);
         win_Text.transform.DOScale(Vector3.one, .5f);
         ChangeChronoTextEndGame();
-        chronoText.gameObject.transform.DOScale(Vector2.one, .5f);
+        chronoParent.gameObject.transform.DOScale(Vector2.one, .5f);
     }
 
     void ChangeChronoTextEndGame()
     {
-        chronoText.gameObject.transform.position = tpEndChronoText.position;
+        chronoParent.gameObject.transform.position = tpEndChronoText.position;
         var getTime = chronoText.text;
-        chronoText.text = $"Time : {getTime}";
-        chronoText.alignment = TextAlignmentOptions.Center;
+        //chronoText.text = $"Time : {getTime}";
+        //chronoText.alignment = TextAlignmentOptions.Center;
     }
 
 

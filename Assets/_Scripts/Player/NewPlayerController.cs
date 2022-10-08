@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,17 +41,18 @@ public class NewPlayerController : MonoBehaviour
     private RaycastHit2D[] _hitResults = new RaycastHit2D[1];
 
     [Header("Jump")]
-    [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)] private float _timeMinBetweenJump;
+    [SerializeField, Tooltip("The timer between two jumps.")][Range(1, 50)] private float _timeMinBetweenJump;
     [SerializeField, Range(1, 50)] private float _jumpForce;
     [SerializeField, Range(-40, -1), Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")] private float _velocityFallMin;
-    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
-    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
+    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
+    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
     [SerializeField, Range(0.1f, 3)] private float _jumpInputTimer;
     [SerializeField, Range(0.01f, 0.99f)] private float _coyoteTime;
     private float _timerNoJump;
     private float _timerSinceJumpPressed;
     private bool _inputJump;
     private bool _isJumping;
+    private bool _hasJump;
 
     [Header("Dash")]
     [SerializeField, Range(1, 30)] private float _dashForce;
@@ -64,6 +66,12 @@ public class NewPlayerController : MonoBehaviour
     private Vector2 _dashInputValue;
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
+
+    [Header("FX")]
+    [SerializeField] private GameObject fx_Jump;
+    [SerializeField] private GameObject fx_Land;
+    [SerializeField] private GameObject fx_Walk;
+
 
     #endregion
 
@@ -172,6 +180,16 @@ public class NewPlayerController : MonoBehaviour
         {
             _isJumping = true;
 
+            if (!_hasJump) //Launch FX_Jump
+            {
+                var _transferPos = transform;
+                GameObject go = Instantiate(fx_Jump, _transferPos);
+                var _isFlip = _playerDisplay.gameObject.GetComponent<SpriteRenderer>().flipX;
+                float _flipOrNot = _isFlip ? 1 : -1;
+                go.transform.localScale = new Vector3(_flipOrNot, 1, 1);
+                _hasJump = true;
+            }
+
             if (_playerRigidbody2D.velocity.y < 0)
             {
                 _playerRigidbody2D.gravityScale = _gravity;
@@ -196,6 +214,7 @@ public class NewPlayerController : MonoBehaviour
         {
             _isDashing = false;
             _isJumping = false;
+            _hasJump = false;
         }
     }
 
@@ -229,12 +248,20 @@ public class NewPlayerController : MonoBehaviour
         if (!currentGrounded && _isGrounded)
             _timeSinceGrounded = 0;
 
+        if (currentGrounded && !_isGrounded)
+        {
+            var _transferPos = transform;
+            Instantiate(fx_Land, _transferPos);
+        }
+
         _isGrounded = currentGrounded;
     }
 
     private void HandleDash(InputAction.CallbackContext obj)
     {
         if (_isGrounded || _remainingDashes < 0) return;
+
+
 
         _isDashing = true;
 
@@ -267,6 +294,7 @@ public class NewPlayerController : MonoBehaviour
                     break;
                 }
         }
+
     }
 
     //private void HandleWalled()
@@ -309,5 +337,10 @@ public class NewPlayerController : MonoBehaviour
                 _playerRigidbody2D.velocity.y);
         }
 
+
+        if (_currentInputs != Vector2.zero)
+            fx_Walk.SetActive(true);
+        else
+            fx_Walk.SetActive(false);
     }
 }

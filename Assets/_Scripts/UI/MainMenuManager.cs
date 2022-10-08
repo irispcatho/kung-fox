@@ -84,7 +84,6 @@ public class MainMenuManager : MonoBehaviour
     {
         FadeOn?.Invoke();
         yield return new WaitForSeconds(TimeFadeOn);
-        //_menus[3].SetActive(true);
         _menus[3].transform.DOScale(Vector3.one, .5f).SetEase(Ease.InCirc);
     }
 

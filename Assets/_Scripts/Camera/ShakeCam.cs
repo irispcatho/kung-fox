@@ -16,7 +16,7 @@ public class ShakeCam : MonoBehaviour
 
     private void Start()
     {
-        //StartShakingCam(0);
+        PlayerManager.Instance.StartShakeDeath += StartShakeDeath;
     }
 
     public void StartShakingCam(float _addTime) //Fonction a appeler pour lancer la coroutine
@@ -40,5 +40,15 @@ public class ShakeCam : MonoBehaviour
         }
 
         transform.position = startPosition;
+    }
+
+    private void StartShakeDeath()
+    {
+        StartShakingCam(-.3f);
+    }
+
+    private void OnDisable()
+    {
+        PlayerManager.Instance.StartShakeDeath -= StartShakeDeath;
     }
 }

@@ -31,10 +31,13 @@ public class NewPlayerController : MonoBehaviour
     private float _timeSinceGrounded;
 
     [Header("Movement")]
-    [SerializeField, Range(1, 50)]
-    private float _moveSpeed;
+    [SerializeField, Range(1, 50)] private float _moveSpeed;
+    [SerializeField] private Vector2 _offsetCollisionBox;
+    [SerializeField] private Vector2 _collisionBox;
     private Vector2 _currentInputs;
     private float _lastNonNullX;
+    private int _boxDetecter;
+    private RaycastHit2D[] _hitResults = new RaycastHit2D[1];
 
     [Header("Jump")]
     [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)] private float _timeMinBetweenJump;
@@ -57,26 +60,10 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private float _dashTimer;
     public int _remainingDashes;
     private bool _inputDash;
-    private bool _inputDownDash;
     private bool _isDashing;
     private Vector2 _dashInputValue;
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
-
-    [Header("Wall")]
-    [SerializeField, Range(-10, 10)] private float _wallOffset;
-    [SerializeField] private float _wallRadius;
-    [SerializeField] private LayerMask _wallMask;
-    [SerializeField, Range(1, 10)] private float _descendSpeed;
-    [SerializeField, Range(1, 50)] private float _wallJumpForce;
-    [SerializeField, Range(0, 3)] private float _wallGravity;
-    private Collider2D[] _collidersWall = new Collider2D[1];
-    private bool _isWalled;
-    private bool _hasThePos;
-    private Vector3 _pos;
-    private Direction _wallJumpDirection;
-    private Vector2 _wallPos;
-    private bool _isWallJumping;
 
     #endregion
 
@@ -109,11 +96,6 @@ public class NewPlayerController : MonoBehaviour
         _playerInputs.Player.Disable();
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.layer != _wallMask) return;
-    }
-
     private void OnDrawGizmos()
     {
         Vector3 position = transform.position;
@@ -122,8 +104,7 @@ public class NewPlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(position + Vector3.up * _groundOffset, _groundRadius);
 
         Gizmos.color = Color.yellow;
-        // Gizmos.DrawWireCube(position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset, _size);
-        Gizmos.DrawWireSphere(position + new Vector3(Mathf.Sign(_lastNonNullX), 0) * _wallOffset, _wallRadius);
+        Gizmos.DrawCube(transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0), _collisionBox);
     }
 
     private void HandleInput()
@@ -144,7 +125,7 @@ public class NewPlayerController : MonoBehaviour
 
     private void DecreaseDashRemaining(InputAction.CallbackContext obj)
     {
-        if(_remainingDashes > 0)
+        if (_remainingDashes > 0)
             _remainingDashes--;
 
         foreach (SpriteRenderer ball in _dashBalls)
@@ -168,8 +149,6 @@ public class NewPlayerController : MonoBehaviour
         _playerAnimator.SetBool("Jump", _isJumping);
         _playerAnimator.SetFloat("VelocityY", _playerRigidbody2D.velocity.y);
 
-        // wall
-        _playerAnimator.SetBool("IsWalled", _isWalled);
         _playerAnimator.SetBool("IsGrounded", _isGrounded);
 
         // dash
@@ -193,21 +172,21 @@ public class NewPlayerController : MonoBehaviour
         {
             _isJumping = true;
 
-            if (_playerRigidbody2D.velocity.y < 0 && !_isWalled)
+            if (_playerRigidbody2D.velocity.y < 0)
             {
                 _playerRigidbody2D.gravityScale = _gravity;
             }
-            else if (_playerRigidbody2D.velocity.y > 0 && !_isWalled)
+            else if (_playerRigidbody2D.velocity.y > 0)
             {
                 _playerRigidbody2D.gravityScale = _inputJump ? _gravityUpJump : _gravity;
             }
         }
-        else if (_isGrounded || _isWalled)
+        else if (_isGrounded)
         {
             _playerRigidbody2D.gravityScale = _gravity;
         }
 
-        if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWalled && !_isWallJumping)
+        if (_playerRigidbody2D.velocity.y < _velocityFallMin)
         {
             _playerRigidbody2D.velocity = new Vector2(_playerRigidbody2D.velocity.x, _velocityFallMin);
             _playerRigidbody2D.gravityScale = _gravity;
@@ -215,10 +194,7 @@ public class NewPlayerController : MonoBehaviour
 
         if (_isGrounded)
         {
-            _hasThePos = false;
-            _isWalled = false;
             _isDashing = false;
-            _isWallJumping = false;
             _isJumping = false;
         }
     }
@@ -317,15 +293,21 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isDashing && !_isWalled && !_isWallJumping && !_isDashing)
+        Vector3 position = transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0);
+        _boxDetecter = Physics2D.BoxCastNonAlloc(position, _collisionBox, 0, Vector2.zero, _hitResults, 0, _groundMask);
+
+        //if (_boxDetecter != 0) return;
+
+        if (!_isDashing && !_isDashing)
         {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
         }
 
-        else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isWallJumping && !_isDashing)
+        else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isDashing)
         {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed / _controllerMalusDash,
                 _playerRigidbody2D.velocity.y);
         }
+
     }
 }

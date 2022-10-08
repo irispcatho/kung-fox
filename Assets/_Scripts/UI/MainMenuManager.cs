@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using DG.Tweening;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -74,6 +75,19 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void LaunchMapping()
+    {
+        StartCoroutine(LaunchMappingTransi());
+    }
+
+    IEnumerator LaunchMappingTransi()
+    {
+        FadeOn?.Invoke();
+        yield return new WaitForSeconds(TimeFadeOn);
+        //_menus[3].SetActive(true);
+        _menus[3].transform.DOScale(Vector3.one, .5f).SetEase(Ease.InCirc);
+    }
+
     public void LaunchGame()
     {
         StartCoroutine(LaunchGameTransi());
@@ -81,7 +95,7 @@ public class MainMenuManager : MonoBehaviour
 
     IEnumerator LaunchGameTransi()
     {
-        FadeOn?.Invoke();
+        _menus[3].transform.DOScale(Vector3.zero, .5f).SetEase(Ease.InCirc);
         yield return new WaitForSeconds(TimeFadeOn);
         SceneManager.LoadScene(0);
     }

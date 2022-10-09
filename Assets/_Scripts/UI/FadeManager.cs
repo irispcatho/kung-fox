@@ -14,7 +14,7 @@ public class FadeManager : MonoBehaviour
 
     void Start()
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
             _timeFadeOn = MainMenuManager.Instance.TimeFadeOn;
             _timeFadeOff = MainMenuManager.Instance.TimeFadeOff;

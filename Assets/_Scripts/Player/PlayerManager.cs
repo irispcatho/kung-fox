@@ -11,6 +11,8 @@ public class PlayerManager : MonoBehaviour
     public event Action PlayerDeath;
     public event Action PlayerWin;
     public event Action StartDeathBloc;
+    public event Action InsideDarkZone;
+    public event Action OutsideDarkZone;
 
     [SerializeField] private GameObject fx_Death;
     [SerializeField] private GameObject fx_Win;
@@ -44,10 +46,12 @@ public class PlayerManager : MonoBehaviour
             if (collision.gameObject.GetComponent<RockFalling>())
                 Destroy(collision.gameObject);
         }
+    }
 
-
-        
-
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<DarkZone>())
+            InsideDarkZone?.Invoke();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -57,15 +61,13 @@ public class PlayerManager : MonoBehaviour
             PlayerWin?.Invoke();
             PlayerWinAnim();
         }
+        
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
         if (collision.gameObject.GetComponent<DarkZone>())
-        {
-            print("salut c'est la darkzone");
-        }
-        if (collision.gameObject.GetComponent<DestructibleBloc>())
-        {
-            StartDeathBloc?.Invoke();
-            collision.gameObject.GetComponent<DestructibleBloc>().StartAnimDeathBloc();
-        }
+            OutsideDarkZone?.Invoke();
     }
 
     private void PlayerDeathAnim()

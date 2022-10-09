@@ -60,6 +60,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private int _dashes = 3;
     [SerializeField] private SpriteRenderer[] _dashBalls;
     [SerializeField] private float _dashTimer;
+    [SerializeField] private GameObject _arrowDirection;
     public int _remainingDashes;
     private bool _inputDash;
     private bool _isDashing;
@@ -71,7 +72,9 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private GameObject fx_Jump;
     [SerializeField] private GameObject fx_Land;
     [SerializeField] private GameObject fx_Walk;
+    [SerializeField] private GameObject fx_Dash;
     [SerializeField] private TrailRenderer _trail;
+    [SerializeField] private Color[] _changeColorDarkZone;
 
 
     #endregion
@@ -81,6 +84,12 @@ public class NewPlayerController : MonoBehaviour
         Instance = this;
         _playerInputs = new PlayerInputs();
         _remainingDashes = _dashes;
+    }
+
+    private void Start()
+    {
+        PlayerManager.Instance.InsideDarkZone += InsideDarkZone;
+        PlayerManager.Instance.OutsideDarkZone += OutsideDarkZone;
     }
 
     private void Update()
@@ -104,6 +113,8 @@ public class NewPlayerController : MonoBehaviour
     private void OnDisable()
     {
         _playerInputs.Player.Disable();
+        PlayerManager.Instance.InsideDarkZone -= InsideDarkZone;
+        PlayerManager.Instance.OutsideDarkZone -= OutsideDarkZone;
     }
 
     private void OnDrawGizmos()
@@ -114,7 +125,7 @@ public class NewPlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(position + Vector3.up * _groundOffset, _groundRadius);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawCube(transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0), _collisionBox);
+        Gizmos.DrawWireCube(transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0), _collisionBox);
     }
 
     private void HandleInput()
@@ -141,14 +152,12 @@ public class NewPlayerController : MonoBehaviour
 
     private void DecreaseDashRemaining(InputAction.CallbackContext obj)
     {
+        if (_isGrounded) return;
+
         if (_remainingDashes > -1)
-        {
             _remainingDashes--;
-        }
         else
-        {
             return;
-        }
 
         foreach (SpriteRenderer ball in _dashBalls)
         {
@@ -276,9 +285,9 @@ public class NewPlayerController : MonoBehaviour
     {
         if (_isGrounded || _remainingDashes < 0) return;
 
-
         _trail.enabled = true;
         _isDashing = true;
+        Instantiate(fx_Dash, _arrowDirection.transform);
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
@@ -293,7 +302,6 @@ public class NewPlayerController : MonoBehaviour
                 break;
             case > 135f:
                 _playerAnimator.Play("DashSide");
-                // _playerSpriteRenderer.flipX = true;
                 break;
             default:
                 {
@@ -309,7 +317,6 @@ public class NewPlayerController : MonoBehaviour
                     break;
                 }
         }
-
     }
 
     //private void HandleWalled()
@@ -357,5 +364,31 @@ public class NewPlayerController : MonoBehaviour
             fx_Walk.SetActive(true);
         else
             fx_Walk.SetActive(false);
+
+        //Movement ArrowDir
+        _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
+        if (_dashInputValue != Vector2.zero)
+        {
+            _arrowDirection.SetActive(true);
+            float angle = Mathf.Atan2(_dashInputValue.y, _dashInputValue.x) * Mathf.Rad2Deg;
+            _arrowDirection.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+        }
+        else
+            _arrowDirection.SetActive(false);
+    }
+
+
+    //const float _alphaDarkZone = .6f;
+    private void InsideDarkZone()
+    {
+        //Color _changeAlpha = _playerDisplay.GetComponent<SpriteRenderer>().color;
+        //_changeAlpha.a = _alphaDarkZone;
+        //_playerDisplay.GetComponent<SpriteRenderer>().color = _changeAlpha;
+        _playerDisplay.GetComponent<SpriteRenderer>().color = _changeColorDarkZone[1];
+    }
+
+    private void OutsideDarkZone()
+    {
+        _playerDisplay.GetComponent<SpriteRenderer>().color = _changeColorDarkZone[0];
     }
 }

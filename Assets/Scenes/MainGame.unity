@@ -170,6 +170,18 @@ PrefabInstance:
       propertyPath: _changeColorDarkZone.Array.data[1].r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 559873806343183231, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: resetRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1637245334070498356, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: resetRate
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3282675396250781022, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: resetRate
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6680542856012886097, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -49256,6 +49268,10 @@ PrefabInstance:
     - target: {fileID: 3441057221880473937, guid: 1ecb0b4585a81864a95fae21b677f23c, type: 3}
       propertyPath: m_Name
       value: DarkZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 3441057221880473937, guid: 1ecb0b4585a81864a95fae21b677f23c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3441057221880473938, guid: 1ecb0b4585a81864a95fae21b677f23c, type: 3}
       propertyPath: m_RootOrder

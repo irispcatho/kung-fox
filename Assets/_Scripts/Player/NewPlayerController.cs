@@ -75,6 +75,8 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private GameObject fx_Dash;
     [SerializeField] private TrailRenderer _trail;
     [SerializeField] private Color[] _changeColorDarkZone;
+    public bool canResetDash = false;
+
 
 
     #endregion
@@ -165,7 +167,9 @@ public class NewPlayerController : MonoBehaviour
             if (!controller.IsCharged) continue;
             ball.enabled = false;
             controller.IsCharged = false;
-            controller.InitiateTimer(_dashTimer);
+            //controller.InitiateTimer(_dashTimer);
+            controller.LaunchTimer();
+            canResetDash = true;
             return;
         }
     }
@@ -385,10 +389,12 @@ public class NewPlayerController : MonoBehaviour
         //_changeAlpha.a = _alphaDarkZone;
         //_playerDisplay.GetComponent<SpriteRenderer>().color = _changeAlpha;
         _playerDisplay.GetComponent<SpriteRenderer>().color = _changeColorDarkZone[1];
+        canResetDash = false;
     }
 
     private void OutsideDarkZone()
     {
         _playerDisplay.GetComponent<SpriteRenderer>().color = _changeColorDarkZone[0];
+        canResetDash = true;
     }
 }

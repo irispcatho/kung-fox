@@ -96,6 +96,11 @@ public class MainMenuManager : MonoBehaviour
     {
         _menus[3].transform.DOScale(Vector3.zero, .5f).SetEase(Ease.InCirc);
         yield return new WaitForSeconds(TimeFadeOn);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
+    }
+
+    public void LaunchSelectSoundButton()
+    {
+        AudioManager.Instance.PlaySound("MenuSelect");
     }
 }

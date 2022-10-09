@@ -161,6 +161,7 @@ public class NewPlayerController : MonoBehaviour
         else
             return;
 
+        AudioManager.Instance.PlaySound("PlayerDash");
         foreach (SpriteRenderer ball in _dashBalls)
         {
             DashBallsController controller = ball.GetComponent<DashBallsController>();
@@ -207,13 +208,14 @@ public class NewPlayerController : MonoBehaviour
         {
             _isJumping = true;
 
-            if (!_hasJump) //Launch FX_Jump
+            if (!_hasJump) //Launch FX_Jump and sound
             {
                 var _transferPos = transform;
                 GameObject go = Instantiate(fx_Jump, _transferPos);
                 var _isFlip = _playerDisplay.gameObject.GetComponent<SpriteRenderer>().flipX;
                 float _flipOrNot = _isFlip ? 1 : -1;
                 go.transform.localScale = new Vector3(_flipOrNot, 1, 1);
+                AudioManager.Instance.PlaySound("PlayerJump");
                 _hasJump = true;
             }
 
@@ -280,6 +282,7 @@ public class NewPlayerController : MonoBehaviour
         {
             var _transferPos = transform;
             Instantiate(fx_Land, _transferPos);
+            AudioManager.Instance.PlaySound("PlayerLand");
         }
 
         _isGrounded = currentGrounded;

@@ -56,6 +56,7 @@ public class DashBallsController : MonoBehaviour
                 NewPlayerController.Instance._remainingDashes++;
                 IsCharged = true;
                 BallSpriteRenderer.enabled = true;
+                AudioManager.Instance.PlaySound("ResetDash");
                 canReset = false;
             }
         }

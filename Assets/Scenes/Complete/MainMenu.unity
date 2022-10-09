@@ -123,6 +123,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &22753385 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6104066858802868552, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
+  m_PrefabInstance: {fileID: 144277900}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &87198640
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -685,6 +690,35 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4446701054124447359, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
   m_PrefabInstance: {fileID: 144277900}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &144277905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 22753385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 457181991}
+          m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+          m_MethodName: LaunchSelectSoundButton
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &164583457
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,6 +928,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 219758523}
   m_CullTransparentMesh: 1
+--- !u!1 &220218576 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6104066858802868552, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
+  m_PrefabInstance: {fileID: 9190173305934776180}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &236480752
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1046,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -447}
-  m_SizeDelta: {x: 1442.88, y: 64.29}
+  m_SizeDelta: {x: 753.62, y: 64.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &264579627
 MonoBehaviour:
@@ -1184,6 +1223,11 @@ MonoBehaviour:
   referenceFontSize: -1
   isResettingEffectsOnNewText: 1
   timeScale: 0
+--- !u!1 &302311897 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6104066858802868552, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
+  m_PrefabInstance: {fileID: 1656880086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &361263518
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,7 +1265,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -447}
-  m_SizeDelta: {x: 1442.88, y: 64.29}
+  m_SizeDelta: {x: 554.78, y: 64.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &361263520
 MonoBehaviour:
@@ -1873,7 +1917,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 0.7921569, g: 0.13333334, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3216,6 +3260,35 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4446701054124447359, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
   m_PrefabInstance: {fileID: 1656880086}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1656880091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302311897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 457181991}
+          m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+          m_MethodName: LaunchSelectSoundButton
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!4 &1743998342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3187550537347408390, guid: 0294dbcc1d8553c43b5317d7bfa31871, type: 3}
@@ -4027,6 +4100,7 @@ GameObject:
   - component: {fileID: 824521571670577195}
   - component: {fileID: 6008808107276625954}
   - component: {fileID: 4584991725603305580}
+  - component: {fileID: 6008808107276625955}
   m_Layer: 5
   m_Name: BackButton
   m_TagString: Untagged
@@ -4199,6 +4273,35 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6008808107276625955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3091443969137307808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 457181991}
+          m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+          m_MethodName: LaunchSelectSoundButton
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &8185726068011575100
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4471,3 +4574,32 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4446701054124447359, guid: f6ae2a6c3af8c114494874438b1743a5, type: 3}
   m_PrefabInstance: {fileID: 9190173305934776180}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9190173305934776185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220218576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 457181991}
+          m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+          m_MethodName: LaunchSelectSoundButton
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2

@@ -23,6 +23,7 @@ public class TriggerBlocDestruc : MonoBehaviour
         {
             StartDeathBloc?.Invoke();
             collision.gameObject.GetComponent<DestructibleBloc>().StartAnimDeathBloc();
+            AudioManager.Instance.PlaySound("BreakBloc");
             Destroy(gameObject);
         }
     }

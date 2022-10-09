@@ -5,6 +5,8 @@ using UnityEngine;
 public class SpawnRocksFalling : MonoBehaviour
 {
     [SerializeField] private GameObject _rockFalling;
+    [SerializeField] private Sprite[]  _whichSprtiteRock;
+    [Range(1,3)] [SerializeField] private int _whichRock;
 
     private const float _timeSpawningRockFalling = 2f;
     private void Start()
@@ -16,7 +18,8 @@ public class SpawnRocksFalling : MonoBehaviour
     {
         yield return new WaitForSeconds(_timeSpawningRockFalling);
         var _tranferPos = gameObject.transform.position;
-        Instantiate(_rockFalling, _tranferPos, gameObject.transform.rotation);
+        GameObject go = Instantiate(_rockFalling, _tranferPos, gameObject.transform.rotation);
+        go.GetComponent<SpriteRenderer>().sprite = _whichSprtiteRock[_whichRock];
         StartCoroutine(SpawnRockFalling());
     }
 }

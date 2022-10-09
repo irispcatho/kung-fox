@@ -49,6 +49,9 @@ MonoBehaviour:
   win_Text: {fileID: 0}
   TimeFadeOn: 0.5
   TimeFadeOff: 0.5
+  chronoText: {fileID: 0}
+  chronoParent: {fileID: 0}
+  tpEndChronoText: {fileID: 0}
 --- !u!114 &4267124607879568246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,45 +67,45 @@ MonoBehaviour:
   sounds:
   - name: PlayerDash
     clip: {fileID: 8300000, guid: 8ef990e334cff934b92688b75737a292, type: 3}
-    volume: 0.174
+    volume: 0.07
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: PlayerDeath
     clip: {fileID: 8300000, guid: 5bfd6041b351c7c4997e62fbb2b9095b, type: 3}
-    volume: 0.174
+    volume: 0.135
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: PlayerJump
     clip: {fileID: 8300000, guid: ce3a5b02ad50e204ba929add8ee51b17, type: 3}
-    volume: 0.174
+    volume: 0.09
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: PlayerLand
     clip: {fileID: 8300000, guid: 58835c7bbb7672144b2c245543502425, type: 3}
-    volume: 0.174
+    volume: 0.1
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: PlayerWalk
     clip: {fileID: 8300000, guid: c1d654249665a524f893d321512c4890, type: 3}
-    volume: 0.035
+    volume: 0.506
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: MusicTheme2
+  - name: MusicMain
     clip: {fileID: 8300000, guid: 3c509acd4ee7d9042b7bf2fc01c43ae6, type: 3}
-    volume: 0.035
+    volume: 0.1
     pitch: 1
-    loop: 0
+    loop: 1
     source: {fileID: 0}
   - name: MusicMenu
     clip: {fileID: 8300000, guid: 65754cb9f4adfaa4d9298eea8a68f9c5, type: 3}
-    volume: 0.085
+    volume: 0.195
     pitch: 1
-    loop: 0
+    loop: 1
     source: {fileID: 0}
   - name: EarnEnergy
     clip: {fileID: 8300000, guid: c5b5960617246574bb2777984b06bca1, type: 3}
@@ -112,17 +115,17 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: BreakBloc
     clip: {fileID: 8300000, guid: 7ca928860fb875d42b18b2f7a311b23a, type: 3}
-    volume: 0.118
+    volume: 0.5
     pitch: 1
     loop: 0
     source: {fileID: 0}
   - name: EnterDarkZone
     clip: {fileID: 8300000, guid: cd2dca48881b5374aab79f74a8819fd1, type: 3}
-    volume: 0.118
+    volume: 0.05
     pitch: 1
     loop: 0
     source: {fileID: 0}
-  - name: RechargeEnergy
+  - name: ResetDash
     clip: {fileID: 8300000, guid: f62841dd71f8f5c44b510224e37ba609, type: 3}
     volume: 0.118
     pitch: 1

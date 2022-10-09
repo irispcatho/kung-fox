@@ -42,6 +42,7 @@ public class PlayerManager : MonoBehaviour
             PlayerDeath?.Invoke();
             ShakeCam.Instance.StartShakingCam(0.5f);
             PlayerDeathAnim();
+            AudioManager.Instance.PlaySound("PlayerDeath");
 
             if (collision.gameObject.GetComponent<RockFalling>())
                 Destroy(collision.gameObject);
@@ -61,7 +62,9 @@ public class PlayerManager : MonoBehaviour
             PlayerWin?.Invoke();
             PlayerWinAnim();
         }
-        
+
+        if (collision.gameObject.GetComponent<DarkZone>())
+            AudioManager.Instance.PlaySound("EnterDarkZone");
     }
 
     private void OnTriggerExit2D(Collider2D collision)

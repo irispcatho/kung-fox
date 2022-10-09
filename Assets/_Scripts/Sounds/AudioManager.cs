@@ -29,14 +29,10 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.name == "Menu")
-        {
-            //PlaySound("PlayerShoot");
-        }
+        if (currentScene.name == "MainGame")
+            PlaySound("MusicMain");
         else
-        {
-            //PlaySound("MusicGame");
-        }
+            PlaySound("MusicMenu");
     }
 
     public void PlaySound(string name)

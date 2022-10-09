@@ -50,10 +50,7 @@ public class MainGameManager : MonoBehaviour
         else
         {
             if (!hasMoveChrono)
-            {
-                
                 hasMoveChrono = true;
-            }
         }
     }
 

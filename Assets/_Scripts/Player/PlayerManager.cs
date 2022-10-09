@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
 {
     public event Action PlayerDeath;
     public event Action PlayerWin;
-    public event Action StartShakeDeath;
+    public event Action StartDeathBloc;
 
     [SerializeField] private GameObject fx_Death;
     [SerializeField] private GameObject fx_Win;
@@ -46,12 +46,7 @@ public class PlayerManager : MonoBehaviour
         }
 
 
-        if (collision.gameObject.GetComponent<DestructibleBloc>())
-        {
-            //ShakeMap.Instance.StartShakingCam(-.3f);
-            StartShakeDeath?.Invoke();
-            Destroy(collision.gameObject);
-        }
+        
 
     }
 
@@ -65,6 +60,11 @@ public class PlayerManager : MonoBehaviour
         if (collision.gameObject.GetComponent<DarkZone>())
         {
             print("salut c'est la darkzone");
+        }
+        if (collision.gameObject.GetComponent<DestructibleBloc>())
+        {
+            StartDeathBloc?.Invoke();
+            collision.gameObject.GetComponent<DestructibleBloc>().StartAnimDeathBloc();
         }
     }
 

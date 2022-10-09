@@ -71,6 +71,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField] private GameObject fx_Jump;
     [SerializeField] private GameObject fx_Land;
     [SerializeField] private GameObject fx_Walk;
+    [SerializeField] private TrailRenderer _trail;
 
 
     #endregion
@@ -212,6 +213,7 @@ public class NewPlayerController : MonoBehaviour
 
         if (_isGrounded)
         {
+            _trail.enabled = false;
             _isDashing = false;
             _isJumping = false;
             _hasJump = false;
@@ -262,7 +264,7 @@ public class NewPlayerController : MonoBehaviour
         if (_isGrounded || _remainingDashes < 0) return;
 
 
-
+        _trail.enabled = true;
         _isDashing = true;
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();

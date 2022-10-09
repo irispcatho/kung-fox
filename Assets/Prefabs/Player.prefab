@@ -170,8 +170,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _moveSpeed: 6.2
-  _offsetCollisionBox: {x: 0, y: 0}
-  _collisionBox: {x: 0, y: 0}
+  _offsetCollisionBox: {x: 0.25, y: 0.04}
+  _collisionBox: {x: 0.28, y: 0.33}
   _timeMinBetweenJump: 0.5
   _jumpForce: 10
   _velocityFallMin: -20
@@ -180,7 +180,7 @@ MonoBehaviour:
   _jumpInputTimer: 0.3
   _coyoteTime: 0.15
   _dashForce: 1.7
-  _controllerMalusDash: 3.33
+  _controllerMalusDash: 1.54
   _dashes: 3
   _dashBalls:
   - {fileID: 1698047631986839299}
@@ -191,6 +191,7 @@ MonoBehaviour:
   fx_Jump: {fileID: 327331834933838788, guid: c564a575fc119e04bb906719765d459a, type: 3}
   fx_Land: {fileID: 8489997583373172172, guid: 0f7c4be1e1faa4d40b57cdcd882f9ab7, type: 3}
   fx_Walk: {fileID: 5248204572259659994}
+  _trail: {fileID: 172504725}
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4
@@ -221,7 +222,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 6680542856012886101}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 24d16d76481289047a53e11b5f727702, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -687,6 +688,22 @@ PrefabInstance:
     - target: {fileID: 2778278167555984353, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778278167555984355, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
+      propertyPath: VelocityModule.y.scalar
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778278167555984355, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778278167555984355, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778278167555984355, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}

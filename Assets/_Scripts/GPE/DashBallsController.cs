@@ -8,15 +8,17 @@ public class DashBallsController : MonoBehaviour
 {
     public SpriteRenderer BallSpriteRenderer;
     public bool IsCharged;
+    
     private bool _isCooldown = false;
     private float nextReset;
-    [SerializeField] private float resetRate;
+    private float resetRate;
     private bool canReset = false;
 
 
     private void Start()
     {
         IsCharged = true;
+        resetRate = NewPlayerController.Instance.DashTimer;
     }
 
     //public void InitiateTimer(float timer)

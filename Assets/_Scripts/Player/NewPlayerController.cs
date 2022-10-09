@@ -59,7 +59,7 @@ public class NewPlayerController : MonoBehaviour
     [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
     [SerializeField] private int _dashes = 3;
     [SerializeField] private SpriteRenderer[] _dashBalls;
-    [SerializeField] private float _dashTimer;
+    public float DashTimer;
     [SerializeField] private GameObject _arrowDirection;
     public int _remainingDashes;
     private bool _inputDash;

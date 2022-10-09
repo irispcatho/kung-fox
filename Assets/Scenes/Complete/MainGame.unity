@@ -135,6 +135,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 634717162}
     - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
+      propertyPath: DashTimer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 919088410, guid: f2f34abde07211b4db9d489f3b42a703, type: 3}
       propertyPath: _changeColorDarkZone.Array.size
       value: 2
       objectReference: {fileID: 0}

@@ -86,6 +86,7 @@ public class NewPlayerController : MonoBehaviour
     private void Update()
     {
         HandleInput();
+        RefreshDash();
     }
 
     private void FixedUpdate()
@@ -132,10 +133,22 @@ public class NewPlayerController : MonoBehaviour
         HandleAnimationParameters();
     }
 
+    private void RefreshDash()
+    {
+        if (_remainingDashes <= -1)
+            _remainingDashes = 0;
+    }
+
     private void DecreaseDashRemaining(InputAction.CallbackContext obj)
     {
-        if (_remainingDashes > 0)
+        if (_remainingDashes > -1)
+        {
             _remainingDashes--;
+        }
+        else
+        {
+            return;
+        }
 
         foreach (SpriteRenderer ball in _dashBalls)
         {
@@ -323,8 +336,8 @@ public class NewPlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        Vector3 position = transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0);
-        _boxDetecter = Physics2D.BoxCastNonAlloc(position, _collisionBox, 0, Vector2.zero, _hitResults, 0, _groundMask);
+        //Vector3 position = transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0);
+        //_boxDetecter = Physics2D.BoxCastNonAlloc(position, _collisionBox, 0, Vector2.zero, _hitResults, 0, _groundMask);
 
         //if (_boxDetecter != 0) return;
 

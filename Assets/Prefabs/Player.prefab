@@ -356,18 +356,18 @@ MonoBehaviour:
   - {fileID: 1698047631986839299}
   - {fileID: 3217368138337590889}
   - {fileID: 499080308072988744}
-  DashTimer: 3
   _arrowDirection: {fileID: 1378399694}
+  DashTimer: 3
   _remainingDashes: 0
-  fx_Jump: {fileID: 327331834933838788, guid: c564a575fc119e04bb906719765d459a, type: 3}
-  fx_Land: {fileID: 8489997583373172172, guid: 0f7c4be1e1faa4d40b57cdcd882f9ab7, type: 3}
-  fx_Walk: {fileID: 5248204572259659994}
-  fx_Dash: {fileID: 1566351754388297866, guid: 53277cbd13860df4ca1b209a2a6eaf65, type: 3}
+  _fxJump: {fileID: 327331834933838788, guid: c564a575fc119e04bb906719765d459a, type: 3}
+  _fxLand: {fileID: 8489997583373172172, guid: 0f7c4be1e1faa4d40b57cdcd882f9ab7, type: 3}
+  _fxWalk: {fileID: 2778278167555984352, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
+  _fxDash: {fileID: 1566351754388297866, guid: 53277cbd13860df4ca1b209a2a6eaf65, type: 3}
   _trail: {fileID: 172504725}
   _changeColorDarkZone:
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 0.5801887, b: 0.5801887, a: 0.78431374}
-  canResetDash: 0
+  _canResetDash: 0
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4
@@ -943,11 +943,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
---- !u!1 &5248204572259659994 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2778278167555984352, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}
-  m_PrefabInstance: {fileID: 7952005670440270650}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5248204572259659995 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2778278167555984353, guid: 073864e89afc1eb4296f3c74723d5cf0, type: 3}

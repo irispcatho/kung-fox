@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TriggerBlocDestruc : MonoBehaviour
 {
-    public event Action StartDeathBloc;
-
     private void Start()
     {
         StartCoroutine(DestroyObject());

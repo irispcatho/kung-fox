@@ -90,6 +90,7 @@ public class PlayerManager : MonoBehaviour
     private void ResetPosPlayer()
     {
         gameObject.transform.DOMove(_spawnPoint.position, 0);
+        OutsideDarkZone?.Invoke();
     }
 
     private void ResetScalePlayer()

@@ -137,6 +137,12 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: WinMusic
+    clip: {fileID: 8300000, guid: 107c593abe772a34287fd79177981b4a, type: 3}
+    volume: 0.118
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
 --- !u!81 &3363499706391675446
 AudioListener:
   m_ObjectHideFlags: 0

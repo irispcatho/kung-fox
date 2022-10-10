@@ -137,12 +137,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 841450099405521902, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_text
-      value: '---<bounce>GD</bounce>---
+      value: '<color=#CA2200>---<bounce>GD</bounce>---</color>
 
-        Derisquebourg Gaspard
+        Derisquebourg
+        Gaspard
 
-        Goulam
-        Rasoul Nael'
+        Goulam Rasoul Nael'
       objectReference: {fileID: 0}
     - target: {fileID: 841450099405521902, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_fontSize
@@ -1916,7 +1916,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4278198986
   m_fontColor: {r: 0.7921569, g: 0.13333334, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -2949,11 +2949,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 841450099405521902, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_text
-      value: '---<bounce>GP</bounce>---
+      value: '<color=#CA2200>---<bounce>GP</bounce>---</color>
 
         Pecquet Iris
 
-        Charlet Samuel'
+        Charlet
+        Samuel'
       objectReference: {fileID: 0}
     - target: {fileID: 5667398814432972238, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_Pivot.x
@@ -4311,12 +4312,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 841450099405521902, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_text
-      value: '---<bounce>GA</bounce>---
+      value: '<color=#CA2200>---<bounce>GA</bounce>---</color>
 
-        Lannuzel Alicia
+        Lannuzel
+        Alicia
 
-        Detollenaere
-        Tristan'
+        Detollenaere Tristan'
       objectReference: {fileID: 0}
     - target: {fileID: 841450099405521902, guid: 9f554e3638cbcda46a773a21d74c2628, type: 3}
       propertyPath: m_fontSize

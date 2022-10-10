@@ -37,11 +37,11 @@ public class PlayerController : MonoBehaviour
     private float _lastNonNullX;
 
     [Header("Jump")]
-    [SerializeField, Tooltip("The timer between two jumps.")][Range(1, 50)] private float _timeMinBetweenJump;
+    [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)] private float _timeMinBetweenJump;
     [SerializeField, Range(1, 50)] private float _jumpForce;
     [SerializeField, Range(-40, -1), Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")] private float _velocityFallMin;
-    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
-    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
     [SerializeField, Range(0.1f, 3)] private float _jumpInputTimer;
     [SerializeField, Range(0.01f, 0.99f)] private float _coyoteTime;
     private float _timerNoJump;
@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _fxLand;
     [SerializeField] private GameObject _fxWalk;
     [SerializeField] private GameObject _fxDash;
+    private GameObject _stockFXDash;
     [SerializeField] private TrailRenderer _trail;
     [SerializeField] private Color[] _changeColorDarkZone;
     public bool _canResetDash = false;
@@ -285,13 +286,17 @@ public class PlayerController : MonoBehaviour
 
         _trail.enabled = true;
         _isDashing = true;
-        Instantiate(_fxDash, _arrowDirection.transform);
+
+        Destroy(_stockFXDash);
+        GameObject go = Instantiate(_fxDash, _arrowDirection.transform);
+        _stockFXDash = go;
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
+        Debug.Log(_dashInputValue);
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
 
-        _joystickDirection = -_dashInputValue.normalized;
-        _joystickAngleFromRight = Vector3.Angle(_joystickDirection, Vector3.right);
+        // _joystickDirection = -_dashInputValue.normalized;
+        _joystickAngleFromRight = Vector3.Angle(_dashInputValue, Vector3.right);
 
         switch (_joystickAngleFromRight)
         {
@@ -341,11 +346,15 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isDashing || _isJumping)
+        if (!_isGrounded && !_isDashing && !_isJumping)
+        {
+            _playerRigidbody2D.velocity = (_playerRigidbody2D.velocity * 0.99f + new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y) * 0.01f);
+        }
+        else
         {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
+
         }
-        
         if (_currentInputs != Vector2.zero)
             _fxWalk.SetActive(true);
         else
@@ -360,7 +369,11 @@ public class PlayerController : MonoBehaviour
             _arrowDirection.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
         else
+        {
+            if (_stockFXDash != null)
+                Destroy(_stockFXDash);
             _arrowDirection.SetActive(false);
+        }
     }
 
 

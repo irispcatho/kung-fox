@@ -317,10 +317,9 @@ public class PlayerController : MonoBehaviour
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
-        Debug.Log(_playerRigidbody2D.velocity);
 
 
-        // _joystickDirection = -_dashInputValue.normalized;
+        _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_dashInputValue, Vector3.right);
 
         switch (_joystickAngleFromRight)
@@ -372,7 +371,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isGrounded && !_isDashing && !_isJumping)
+        if (!_isGrounded && !_isDashing && !_isJumping && _playerAnimator.velocity.y > 0)
         {
             _playerRigidbody2D.velocity = (_playerRigidbody2D.velocity * 0.99f +
                                            new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y) *
@@ -380,7 +379,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (_isDashing == false)
+            if (!_isDashing)
                 _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
         }
 

@@ -10,57 +10,39 @@ public class DashBallsController : MonoBehaviour
     public bool IsCharged;
     
     private bool _isCooldown = false;
-    private float nextReset;
-    private float resetRate;
-    private bool canReset = false;
+    private float _nextReset;
+    private float _resetRate;
+    private bool _canReset = false;
 
 
     private void Start()
     {
         IsCharged = true;
-        resetRate = NewPlayerController.Instance.DashTimer;
+        _resetRate = PlayerController.Instance.DashTimer;
     }
-
-    //public void InitiateTimer(float timer)
-    //{
-    //    StartCoroutine(WaitForDash(timer));
-    //}
 
     public void LaunchTimer()
     {
-        canReset = true;
+        _canReset = true;
     }
-
-    //private IEnumerator WaitForDash(float timer)
-    //{
-    //    yield return new WaitForSeconds(timer);
-    //    NewPlayerController.Instance._remainingDashes++;
-    //    IsCharged = true;
-    //    BallSpriteRenderer.enabled = true;
-    //    StopCoroutine(WaitForDash(timer));
-    //}
 
     private void Update()
     {
-        if (!_isCooldown && canReset)
+        if (!_isCooldown && _canReset)
         {
             _isCooldown = true;
-            nextReset = resetRate;
+            _nextReset = _resetRate;
         }
 
-        if (_isCooldown && NewPlayerController.Instance.canResetDash)
-        {
-            nextReset -= Time.deltaTime;
+        if (!_isCooldown || !PlayerController.Instance._canResetDash) return;
+        _nextReset -= Time.deltaTime;
 
-            if (nextReset <= 0)
-            {
-                _isCooldown = false;
-                NewPlayerController.Instance._remainingDashes++;
-                IsCharged = true;
-                BallSpriteRenderer.enabled = true;
-                AudioManager.Instance.PlaySound("ResetDash");
-                canReset = false;
-            }
-        }
+        if (!(_nextReset <= 0)) return;
+        _isCooldown = false;
+        PlayerController.Instance._remainingDashes++;
+        IsCharged = true;
+        BallSpriteRenderer.enabled = true;
+        AudioManager.Instance.PlaySound("ResetDash");
+        _canReset = false;
     }
 }

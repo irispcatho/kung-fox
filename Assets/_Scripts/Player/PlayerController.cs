@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
 
     public static PlayerController Instance;
 
-    [Header("References")] [SerializeField]
+    [Header("References")]
+    [SerializeField]
     private Rigidbody2D _playerRigidbody2D;
 
     [SerializeField] private Animator _playerAnimator;
@@ -25,7 +26,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _playerDisplay;
     private PlayerInputs _playerInputs;
 
-    [Header("GroundCheck")] [SerializeField, Range(-5, 5)]
+    [Header("GroundCheck")]
+    [SerializeField, Range(-5, 5)]
     private float _groundOffset;
 
     [SerializeField, Range(0.1f, 2)] private float _groundRadius;
@@ -34,13 +36,16 @@ public class PlayerController : MonoBehaviour
     private bool _isGrounded;
     private float _timeSinceGrounded;
 
-    [Header("Movement")] [SerializeField, Range(1, 50)]
+    [Header("Movement")]
+    [SerializeField, Range(1, 50)]
     private float _moveSpeed;
 
     private Vector2 _currentInputs;
     private float _lastNonNullX;
 
-    [Header("Jump")] [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)]
+    [Header("Jump")]
+    [SerializeField, Tooltip("The timer between two jumps.")]
+    [Range(1, 50)]
     private float _timeMinBetweenJump;
 
     [SerializeField, Range(1, 50)] private float _jumpForce;
@@ -49,10 +54,12 @@ public class PlayerController : MonoBehaviour
      Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")]
     private float _velocityFallMin;
 
-    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")]
+    [SerializeField, Range(0.1f, 10)]
+    [Tooltip("The gravity when the player press the jump input for a long time.")]
     private float _gravityUpJump;
 
-    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")]
+    [SerializeField, Range(0.1f, 10)]
+    [Tooltip("The gravity when the player press the jump input once.")]
     private float _gravity = 1;
 
     [SerializeField, Range(0.1f, 3)] private float _jumpInputTimer;
@@ -63,7 +70,8 @@ public class PlayerController : MonoBehaviour
     private bool _isJumping;
     private bool _hasJump;
 
-    [Header("Dash")] [SerializeField, Range(1, 30)]
+    [Header("Dash")]
+    [SerializeField, Range(1, 30)]
     private float _dashForce;
 
     [SerializeField, Range(0.1f, 6),
@@ -85,6 +93,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject _fxLand;
     [SerializeField] private GameObject _fxWalk;
     [SerializeField] private GameObject _fxDash;
+    private GameObject _stockFXDash;
     [SerializeField] private TrailRenderer _trail;
     [SerializeField] private Color[] _changeColorDarkZone;
     public bool _canResetDash = false;
@@ -301,12 +310,15 @@ public class PlayerController : MonoBehaviour
 
         _trail.enabled = true;
         _isDashing = true;
-        Instantiate(_fxDash, _arrowDirection.transform);
+
+        Destroy(_stockFXDash);
+        GameObject go = Instantiate(_fxDash, _arrowDirection.transform);
+        _stockFXDash = go;
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
-        Debug.Log(_playerRigidbody2D.velocity );
-        
+        Debug.Log(_playerRigidbody2D.velocity);
+
 
         // _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_dashInputValue, Vector3.right);
@@ -320,19 +332,19 @@ public class PlayerController : MonoBehaviour
                 _playerAnimator.Play("DashSide");
                 break;
             default:
-            {
-                switch (_joystickDirection.y)
                 {
-                    case > 0f:
-                        _playerAnimator.Play("DashUp");
-                        break;
-                    case < 0f when !_isGrounded:
-                        _playerAnimator.Play("DashDown");
-                        break;
-                }
+                    switch (_joystickDirection.y)
+                    {
+                        case > 0f:
+                            _playerAnimator.Play("DashUp");
+                            break;
+                        case < 0f when !_isGrounded:
+                            _playerAnimator.Play("DashDown");
+                            break;
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
     }
 
@@ -386,7 +398,11 @@ public class PlayerController : MonoBehaviour
             _arrowDirection.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         }
         else
+        {
+            if (_stockFXDash != null)
+                Destroy(_stockFXDash);
             _arrowDirection.SetActive(false);
+        }
     }
 
 

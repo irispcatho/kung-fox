@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
 {
     public event Action PlayerDeath;
     public event Action PlayerWin;
-    public event Action StartDeathBloc;
+    //public event Action StartDeathBloc;
     public event Action InsideDarkZone;
     public event Action OutsideDarkZone;
 

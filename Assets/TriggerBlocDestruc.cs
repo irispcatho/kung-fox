@@ -7,11 +7,6 @@ public class TriggerBlocDestruc : MonoBehaviour
 {
     public event Action StartDeathBloc;
 
-    public static TriggerBlocDestruc Instance;
-    private void Awake()
-    {
-        Instance = this;
-    }
     private void Start()
     {
         StartCoroutine(DestroyObject());
@@ -21,7 +16,8 @@ public class TriggerBlocDestruc : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<DestructibleBloc>())
         {
-            StartDeathBloc?.Invoke();
+            //StartDeathBloc?.Invoke();
+            ShakeCam.Instance.StartShakingCam(-.3f);
             collision.gameObject.GetComponent<DestructibleBloc>().StartAnimDeathBloc();
             AudioManager.Instance.PlaySound("BreakBloc");
             Destroy(gameObject);

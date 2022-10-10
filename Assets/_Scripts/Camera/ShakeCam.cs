@@ -14,11 +14,6 @@ public class ShakeCam : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        TriggerBlocDestruc.Instance.StartDeathBloc += StartShakeDeathBloc;
-    }
-
     public void StartShakingCam(float _addTime) //Fonction a appeler pour lancer la coroutine
     {
         StartCoroutine(Shaking(_addTime));
@@ -40,15 +35,5 @@ public class ShakeCam : MonoBehaviour
         }
 
         transform.position = startPosition;
-    }
-
-    private void StartShakeDeathBloc()
-    {
-        StartShakingCam(-.3f);
-    }
-
-    private void OnDisable()
-    {
-        TriggerBlocDestruc.Instance.StartDeathBloc -= StartShakeDeathBloc;
     }
 }

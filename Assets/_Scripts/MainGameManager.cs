@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class MainGameManager : MonoBehaviour
 {
@@ -93,6 +95,8 @@ public class MainGameManager : MonoBehaviour
         win_Text.transform.DOScale(Vector3.one, .5f);
         ChangeChronoTextEndGame();
         chronoParent.gameObject.transform.DOScale(Vector2.one, .5f);
+        yield return new WaitForSeconds(10f);
+        SceneManager.LoadScene(0);
     }
 
     void ChangeChronoTextEndGame()

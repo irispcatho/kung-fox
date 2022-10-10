@@ -95,7 +95,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1471971797}
   - component: {fileID: 1471971799}
-  - component: {fileID: 1471971798}
   m_Layer: 0
   m_Name: PointSpawnFX_Dash
   m_TagString: Untagged
@@ -170,22 +169,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1471971798
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1471971796}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.000015258789, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.1
 --- !u!1 &6070718288494517228
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +356,7 @@ MonoBehaviour:
   - {fileID: 1698047631986839299}
   - {fileID: 3217368138337590889}
   - {fileID: 499080308072988744}
-  _dashTimer: 3
+  DashTimer: 3
   _arrowDirection: {fileID: 1378399694}
   _remainingDashes: 0
   fx_Jump: {fileID: 327331834933838788, guid: c564a575fc119e04bb906719765d459a, type: 3}
@@ -381,6 +364,10 @@ MonoBehaviour:
   fx_Walk: {fileID: 5248204572259659994}
   fx_Dash: {fileID: 1566351754388297866, guid: 53277cbd13860df4ca1b209a2a6eaf65, type: 3}
   _trail: {fileID: 172504725}
+  _changeColorDarkZone:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.5801887, b: 0.5801887, a: 0.78431374}
+  canResetDash: 0
 --- !u!50 &6680542856012886100
 Rigidbody2D:
   serializedVersion: 4

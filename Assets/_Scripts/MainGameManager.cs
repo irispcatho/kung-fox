@@ -87,6 +87,8 @@ public class MainGameManager : MonoBehaviour
     private IEnumerator PlayerWinTransi()
     {
         isGameEnded = true;
+        AudioManager.Instance.PlaySound("WinMusic");
+        AudioManager.Instance.StopSound("MusicMain");
         chronoParent.gameObject.transform.DOScale(Vector2.zero, .5f);
         yield return new WaitForSeconds(TimeFadeOn * 3);
         FadeOn?.Invoke();

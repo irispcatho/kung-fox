@@ -16,32 +16,45 @@ public class PlayerController : MonoBehaviour
     #region Variables
 
     public static PlayerController Instance;
-    [Header("References")]
-    [SerializeField] private Rigidbody2D _playerRigidbody2D;
+
+    [Header("References")] [SerializeField]
+    private Rigidbody2D _playerRigidbody2D;
+
     [SerializeField] private Animator _playerAnimator;
     [SerializeField] private SpriteRenderer _playerSpriteRenderer;
     [SerializeField] private GameObject _playerDisplay;
     private PlayerInputs _playerInputs;
 
-    [Header("GroundCheck")]
-    [SerializeField, Range(-5, 5)] private float _groundOffset;
+    [Header("GroundCheck")] [SerializeField, Range(-5, 5)]
+    private float _groundOffset;
+
     [SerializeField, Range(0.1f, 2)] private float _groundRadius;
     [SerializeField] private LayerMask _groundMask;
     private readonly Collider2D[] _collidersGround = new Collider2D[1];
     private bool _isGrounded;
     private float _timeSinceGrounded;
 
-    [Header("Movement")]
-    [SerializeField, Range(1, 50)] private float _moveSpeed;
+    [Header("Movement")] [SerializeField, Range(1, 50)]
+    private float _moveSpeed;
+
     private Vector2 _currentInputs;
     private float _lastNonNullX;
 
-    [Header("Jump")]
-    [SerializeField, Tooltip("The timer between two jumps.")][Range(1, 50)] private float _timeMinBetweenJump;
+    [Header("Jump")] [SerializeField, Tooltip("The timer between two jumps.")] [Range(1, 50)]
+    private float _timeMinBetweenJump;
+
     [SerializeField, Range(1, 50)] private float _jumpForce;
-    [SerializeField, Range(-40, -1), Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")] private float _velocityFallMin;
-    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input for a long time.")] private float _gravityUpJump;
-    [SerializeField, Range(0.1f, 10)][Tooltip("The gravity when the player press the jump input once.")] private float _gravity = 1;
+
+    [SerializeField, Range(-40, -1),
+     Tooltip("When the velocity reaches this value, the events that the fall triggers begin.")]
+    private float _velocityFallMin;
+
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input for a long time.")]
+    private float _gravityUpJump;
+
+    [SerializeField, Range(0.1f, 10)] [Tooltip("The gravity when the player press the jump input once.")]
+    private float _gravity = 1;
+
     [SerializeField, Range(0.1f, 3)] private float _jumpInputTimer;
     [SerializeField, Range(0.01f, 0.99f)] private float _coyoteTime;
     private float _timerNoJump;
@@ -50,9 +63,13 @@ public class PlayerController : MonoBehaviour
     private bool _isJumping;
     private bool _hasJump;
 
-    [Header("Dash")]
-    [SerializeField, Range(1, 30)] private float _dashForce;
-    [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
+    [Header("Dash")] [SerializeField, Range(1, 30)]
+    private float _dashForce;
+
+    [SerializeField, Range(0.1f, 6),
+     Tooltip("When the character is dashing, we divide the controller influence by this number.")]
+    private float _controllerMalusDash;
+
     [SerializeField] private int _dashes = 3;
     [SerializeField] private SpriteRenderer[] _dashBalls;
     [SerializeField] private GameObject _arrowDirection;
@@ -64,8 +81,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _joystickDirection;
     private float _joystickAngleFromRight;
 
-    [Header("FX")]
-    [SerializeField] private GameObject _fxJump;
+    [Header("FX")] [SerializeField] private GameObject _fxJump;
     [SerializeField] private GameObject _fxLand;
     [SerializeField] private GameObject _fxWalk;
     [SerializeField] private GameObject _fxDash;
@@ -288,8 +304,9 @@ public class PlayerController : MonoBehaviour
         Instantiate(_fxDash, _arrowDirection.transform);
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
-        Debug.Log(_dashInputValue);
         _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
+        Debug.Log(_playerRigidbody2D.velocity );
+        
 
         // _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_dashInputValue, Vector3.right);
@@ -303,18 +320,19 @@ public class PlayerController : MonoBehaviour
                 _playerAnimator.Play("DashSide");
                 break;
             default:
+            {
+                switch (_joystickDirection.y)
                 {
-                    switch (_joystickDirection.y)
-                    {
-                        case > 0f:
-                            _playerAnimator.Play("DashUp");
-                            break;
-                        case < 0f when !_isGrounded:
-                            _playerAnimator.Play("DashDown");
-                            break;
-                    }
-                    break;
+                    case > 0f:
+                        _playerAnimator.Play("DashUp");
+                        break;
+                    case < 0f when !_isGrounded:
+                        _playerAnimator.Play("DashDown");
+                        break;
                 }
+
+                break;
+            }
         }
     }
 
@@ -344,13 +362,16 @@ public class PlayerController : MonoBehaviour
     {
         if (!_isGrounded && !_isDashing && !_isJumping)
         {
-            _playerRigidbody2D.velocity = (_playerRigidbody2D.velocity * 0.99f + new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y) * 0.01f);
+            _playerRigidbody2D.velocity = (_playerRigidbody2D.velocity * 0.99f +
+                                           new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y) *
+                                           0.01f);
         }
         else
         {
-            _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
+            if (_isDashing == false)
+                _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
+        }
 
-        }        
         if (_currentInputs != Vector2.zero)
             _fxWalk.SetActive(true);
         else

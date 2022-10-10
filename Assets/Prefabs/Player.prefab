@@ -335,7 +335,7 @@ MonoBehaviour:
   _playerSpriteRenderer: {fileID: 5695447102205724992}
   _playerDisplay: {fileID: 6070718288494517228}
   _groundOffset: -0.44
-  _groundRadius: 0.23
+  _groundRadius: 0.16
   _groundMask:
     serializedVersion: 2
     m_Bits: 64

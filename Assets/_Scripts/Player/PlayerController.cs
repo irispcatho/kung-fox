@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Dash")]
     [SerializeField, Range(1, 30)] private float _dashForce;
-    // [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
+    [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
     [SerializeField] private int _dashes = 3;
     [SerializeField] private SpriteRenderer[] _dashBalls;
     [SerializeField] private GameObject _arrowDirection;
@@ -199,13 +199,13 @@ public class PlayerController : MonoBehaviour
         {
             _isJumping = true;
 
+            bool isFlip = _playerDisplay.gameObject.GetComponent<SpriteRenderer>().flipX;
             if (!_hasJump) //Launch FX_Jump and sound
             {
-                var _transferPos = transform;
-                GameObject go = Instantiate(_fxJump, _transferPos);
-                var _isFlip = _playerDisplay.gameObject.GetComponent<SpriteRenderer>().flipX;
-                float _flipOrNot = _isFlip ? 1 : -1;
-                go.transform.localScale = new Vector3(_flipOrNot, 1, 1);
+                Transform transferPos = transform;
+                GameObject go = Instantiate(_fxJump, transferPos);
+                float flipOrNot = isFlip ? 1 : -1;
+                go.transform.localScale = new Vector3(flipOrNot, 1, 1);
                 AudioManager.Instance.PlaySound("PlayerJump");
                 _hasJump = true;
             }
@@ -214,6 +214,7 @@ public class PlayerController : MonoBehaviour
             {
                 _playerRigidbody2D.gravityScale = _gravity;
                 _isDashing = false;
+                _isJumping = false;
             }
             else if (_playerRigidbody2D.velocity.y > 0)
             {
@@ -234,7 +235,6 @@ public class PlayerController : MonoBehaviour
         if (_isGrounded)
         {
             _trail.enabled = false;
-            _isJumping = false;
             _hasJump = false;
         }
     }
@@ -341,15 +341,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if(!_isDashing)
+        if (!_isDashing || _isJumping)
+        {
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
-
-        // else if (_playerRigidbody2D.velocity.y < 0 && !_isDashing)
-        // {
-        //     _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed - _controllerMalusDash, _playerRigidbody2D.velocity.y);
-        // }
-
-
+        }
+        
         if (_currentInputs != Vector2.zero)
             _fxWalk.SetActive(true);
         else

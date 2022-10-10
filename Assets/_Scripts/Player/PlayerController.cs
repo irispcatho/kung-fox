@@ -33,12 +33,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField, Range(1, 50)] private float _moveSpeed;
-    [SerializeField] private Vector2 _offsetCollisionBox;
-    [SerializeField] private Vector2 _collisionBox;
     private Vector2 _currentInputs;
     private float _lastNonNullX;
-    private int _boxDetecter;
-    private RaycastHit2D[] _hitResults = new RaycastHit2D[1];
 
     [Header("Jump")]
     [SerializeField, Tooltip("The timer between two jumps.")][Range(1, 50)] private float _timeMinBetweenJump;
@@ -56,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Dash")]
     [SerializeField, Range(1, 30)] private float _dashForce;
-    [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
+    // [SerializeField, Range(0.1f, 6), Tooltip("When the character is dashing, we divide the controller influence by this number.")] private float _controllerMalusDash;
     [SerializeField] private int _dashes = 3;
     [SerializeField] private SpriteRenderer[] _dashBalls;
     [SerializeField] private GameObject _arrowDirection;
@@ -123,9 +119,6 @@ public class PlayerController : MonoBehaviour
 
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(position + Vector3.up * _groundOffset, _groundRadius);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(transform.position + new Vector3(_offsetCollisionBox.x * _lastNonNullX, 0), _collisionBox);
     }
 
     private void HandleInput()
@@ -220,6 +213,7 @@ public class PlayerController : MonoBehaviour
             if (_playerRigidbody2D.velocity.y < 0)
             {
                 _playerRigidbody2D.gravityScale = _gravity;
+                _isDashing = false;
             }
             else if (_playerRigidbody2D.velocity.y > 0)
             {
@@ -240,7 +234,6 @@ public class PlayerController : MonoBehaviour
         if (_isGrounded)
         {
             _trail.enabled = false;
-            _isDashing = false;
             _isJumping = false;
             _hasJump = false;
         }
@@ -348,16 +341,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isDashing && !_isDashing)
-        {
+        if(!_isDashing)
             _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y);
-        }
 
-        else if (_playerRigidbody2D.velocity.y < _velocityFallMin && !_isDashing)
-        {
-            _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed / _controllerMalusDash,
-                _playerRigidbody2D.velocity.y);
-        }
+        // else if (_playerRigidbody2D.velocity.y < 0 && !_isDashing)
+        // {
+        //     _playerRigidbody2D.velocity = new Vector2(_currentInputs.x * _moveSpeed - _controllerMalusDash, _playerRigidbody2D.velocity.y);
+        // }
 
 
         if (_currentInputs != Vector2.zero)

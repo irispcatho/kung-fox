@@ -340,8 +340,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _moveSpeed: 6.2
-  _offsetCollisionBox: {x: 0.25, y: 0.04}
-  _collisionBox: {x: 0.28, y: 0.33}
   _timeMinBetweenJump: 0.5
   _jumpForce: 10
   _velocityFallMin: -20
@@ -350,7 +348,6 @@ MonoBehaviour:
   _jumpInputTimer: 0.3
   _coyoteTime: 0.15
   _dashForce: 1.7
-  _controllerMalusDash: 1.54
   _dashes: 3
   _dashBalls:
   - {fileID: 1698047631986839299}

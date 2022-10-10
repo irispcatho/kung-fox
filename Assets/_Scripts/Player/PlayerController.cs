@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Range(1, 30)]
     private float _dashForce;
 
+    private bool _hasDash;
+
     [SerializeField, Range(0.1f, 6),
      Tooltip("When the character is dashing, we divide the controller influence by this number.")]
     private float _controllerMalusDash;
@@ -261,6 +263,7 @@ public class PlayerController : MonoBehaviour
         {
             _trail.enabled = false;
             _hasJump = false;
+            _hasDash = false;
         }
     }
 
@@ -310,16 +313,18 @@ public class PlayerController : MonoBehaviour
 
         _trail.enabled = true;
         _isDashing = true;
+        _hasDash = true;
 
         Destroy(_stockFXDash);
         GameObject go = Instantiate(_fxDash, _arrowDirection.transform);
         _stockFXDash = go;
 
         _dashInputValue = _playerInputs.Player.FireDirection.ReadValue<Vector2>();
-        _playerRigidbody2D.velocity = -_dashInputValue * (_dashForce * 10);
+        _joystickDirection = Vector3.Normalize(_dashInputValue);
+        
+        _playerRigidbody2D.velocity = -_joystickDirection * (_dashForce * 10);
 
 
-        _joystickDirection = -_dashInputValue.normalized;
         _joystickAngleFromRight = Vector3.Angle(_dashInputValue, Vector3.right);
 
         switch (_joystickAngleFromRight)
@@ -371,7 +376,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (!_isGrounded && !_isDashing && !_isJumping && _playerAnimator.velocity.y > 0)
+        if (!_isGrounded && !_isDashing && !_isJumping && _currentInputs.x == 0)
         {
             _playerRigidbody2D.velocity = (_playerRigidbody2D.velocity * 0.99f +
                                            new Vector2(_currentInputs.x * _moveSpeed, _playerRigidbody2D.velocity.y) *

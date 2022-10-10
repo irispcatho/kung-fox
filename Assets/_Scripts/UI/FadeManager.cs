@@ -49,7 +49,7 @@ public class FadeManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
+        if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
         {
             MainMenuManager.Instance.FadeOn -= FadeOn;
             MainMenuManager.Instance.FadeOff -= FadeOff;

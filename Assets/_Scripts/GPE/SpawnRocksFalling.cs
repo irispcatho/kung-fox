@@ -19,7 +19,7 @@ public class SpawnRocksFalling : MonoBehaviour
         yield return new WaitForSeconds(_timeSpawningRockFalling);
         var _tranferPos = gameObject.transform.position;
         GameObject go = Instantiate(_rockFalling, _tranferPos, gameObject.transform.rotation);
-        go.GetComponent<SpriteRenderer>().sprite = _whichSprtiteRock[_whichRock];
+        go.GetComponent<SpriteRenderer>().sprite = _whichSprtiteRock[_whichRock-1];
         StartCoroutine(SpawnRockFalling());
     }
 }
